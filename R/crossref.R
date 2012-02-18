@@ -1,6 +1,7 @@
 #' Lookup article info via CrossRef with DOI.
 #' @import RCurl XML
 #' @param doi digital object identifier for an article in PLoS Journals
+#' @param title return the title of the paper or not (defaults to FALSE)
 #' @param url the PLoS API url for the function (should be left to default)
 #' @param key your PLoS API key, either enter, or loads from .Rprofile
 #' @param ... optional additional curl options (debugging tools mostly)
@@ -10,10 +11,11 @@
 #' @export
 #' @examples \dontrun{
 #' crossref("10.3998/3336451.0009.101")
+#' crossref("10.3998/3336451.0009.101", TRUE)
 #' }
 crossref <- 
 
-function(doi, 
+function(doi, title = FALSE,
   url = "http://www.crossref.org/openurl/", 
   key = getOption("CrossRefKey", stop("need an API key for Mendeley")), 
   ...,
@@ -29,5 +31,9 @@ function(doi,
   ans = xmlParse(tt)
 ## should really return the content of other nodes too, but this is the important one.  
   nodeset = getNodeSet(ans, "//journal_article")
-  lapply(nodeset, xmlToList)
+  if(title == FALSE){ lapply(nodeset, xmlToList) } else
+    {
+      title_ <- xmlValue(xpathApply(ans, "//full_title")[[1]])
+      list(title_, lapply(nodeset, xmlToList))
+    }
 }

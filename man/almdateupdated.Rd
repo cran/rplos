@@ -1,14 +1,18 @@
-\name{almpub}
-\alias{almpub}
-\title{Get the date when article was last updated by inputting the doi for the article.}
+\name{almdateupdated}
+\alias{almdateupdated}
+\title{Get the date when article was last updated.}
 \usage{
-  almpub(doi, url = "http://alm.plos.org/articles",
+  almdateupdated(doi, get = NA,
+    url = "http://alm.plos.org/articles",
     key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
     ..., curl = getCurlHandle())
 }
 \arguments{
-  \item{doi}{digital object identifier for an article in
-  PLoS Journals}
+  \item{doi}{Digital object identifier for an article in
+  PLoS Journals.}
+
+  \item{get}{Get year, month, or day; if unspecified, whole
+  date returned.}
 
   \item{key}{your PLoS API key, either enter, or loads from
   .Rprofile}
@@ -27,12 +31,12 @@
   Date when article data was last updated.
 }
 \description{
-  Get the date when article was last updated by inputting
-  the doi for the article.
+  Get the date when article was last updated.
 }
 \examples{
 \dontrun{
-almpub('10.1371/journal.pbio.0000012')
+almdateupdated('10.1371/journal.pone.0026871')
+almdateupdated('10.1371/journal.pone.0026871', 'year')
 }
 }
 
