@@ -3,7 +3,6 @@
 \title{Search results on a keyword over all fields in PLoS Journals.}
 \usage{
   plosword(terms, vis = FALSE,
-    url = "http://api.plos.org/search",
     key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
     ..., curl = getCurlHandle())
 }
@@ -12,9 +11,6 @@
 
   \item{vis}{visualize results in bar plot or not (TRUE or
   FALSE)}
-
-  \item{url}{the PLoS API url for the function (should be
-  left to default)}
 
   \item{key}{your PLoS API key, either enter, or loads from
   .Rprofile}
@@ -39,7 +35,7 @@
 \dontrun{
 plosword('Helianthus')
 plosword(list('monkey','Helianthus','sunflower','protein','whale'), vis = 'TRUE')
-out <- plosword(list('monkey','Helianthus','sunflower','protein','whale'), vis = 'TRUE')
+out <- plosword(list('monkey','replication','design','sunflower','whale'), vis = 'TRUE')
 out[[1]] # results in a data frame
 out[[2]] # results in a bar plot
 }

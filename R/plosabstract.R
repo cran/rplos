@@ -1,47 +1,27 @@
 #' Search PLoS Journals abstracts.
-#' @import RJSONIO RCurl
+#' 
+#' @import httr plyr
 #' @param terms search terms for article abstract (character)
 #' @param fields fields to return from search (character) [e.g., 'id,title'], 
 #'    any combination of search fields [see plosfields$field]
 #' @param limit number of results to return (integer)
-#' @param results print results or not (TRUE or FALSE)
-#' @param url the PLoS API url for the function (should be left to default)
 #' @param key your PLoS API key, either enter, or loads from .Rprofile
-#' @param ... optional additional curl options (debugging tools mostly)
-#' @param curl If using in a loop, call getCurlHandle() first and pass 
-#'  the returned value in here (avoids unnecessary footprint)
-#' @return Number of search results (results = FALSE), or number of search 
-#'    results plus the results themselves (results = TRUE).
-#' @export
+#' @return Abstract content, in addition to any other fields requested in a data.frame.
 #' @examples \dontrun{
-#' plosabstract('drosophila', 'abstract', 2, 'FALSE')
-#' plosabstract('drosophila',  limit = 5, results = 'TRUE')
+#' plosabstract(terms = 'drosophila', fields='abstract', limit=10)
+#' plosabstract(terms = 'drosophila', fields='author', limit = 5)
 #' }
-plosabstract <- 
-
-function(terms, fields = NA, limit = NA, results = FALSE, 
-  url = 'http://api.plos.org/search',
-  key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
-  ..., 
-  curl = getCurlHandle() ) 
+#' @export
+plosabstract <- function(terms = NULL, fields = NULL, limit = NULL,
+  key = getOption("PlosApiKey", stop("need an API key for PLoS Journals"))) 
 {
-  args <- list(apikey = key)
-  if(!is.na(terms))
-    args$q <- paste('abstract:', terms, sep="")
-  if(!is.na(fields))
-    args$fl <- fields
-  if(!is.na(limit))
-    args$rows <- limit
-  args$wt <- "json"
-  tt <- getForm(url, 
-    .params = args,
-    ...,
-    curl = curl)
-  jsonout <- fromJSON(I(tt))
-  tempresults <- jsonout$response$docs
-  numres <- length(tempresults) # number of search results
-  names(numres) <- 'Number of search results'
-  dfresults <- data.frame( do.call(rbind, tempresults) )
-  if (results == "TRUE") { return(list(numres, dfresults)) }
-    else { return(numres) }
+	url = 'http://api.plos.org/search'
+	
+	args <- compact(list(q = paste('abstract:', terms, sep=""), fl = fields, 
+											 rows = limit, wt = "json", apikey = key))
+	out <- content(GET(url, query = args))
+	out2 <- out$response$docs
+	out3 <- addmissing(out2)
+	out4 <- lapply(out3, concat_todf)
+	do.call(rbind, out4)
 }

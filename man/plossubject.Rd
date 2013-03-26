@@ -2,50 +2,44 @@
 \alias{plossubject}
 \title{Search PLoS Journals subjects.}
 \usage{
-  plossubject(terms, fields = NA, limit = NA,
-    results = FALSE, url = "http://api.plos.org/search",
-    key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
-    ..., curl = getCurlHandle())
+  plossubject(terms, fields = NULL, limit = NULL,
+    toquery = NULL,
+    key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")))
 }
 \arguments{
-  \item{terms}{search terms for article subjects
+  \item{terms}{Search terms for article subjects
   (character)}
 
-  \item{fields}{fields to return from search (character)
+  \item{fields}{Fields to return from search (character)
   [e.g., 'id,title'], any combination of search fields [see
   plosfields$field]}
 
-  \item{limit}{number of results to return (integer)}
+  \item{toquery}{Specific fields to query (if NA, all
+  queried), in a comma separated string (character) [e.g.,
+  'doc_type:full,year=2010'].}
 
-  \item{results}{print results or not (TRUE or FALSE)}
+  \item{limit}{Number of results to return (integer)}
 
-  \item{url}{the PLoS API url for the function (should be
-  left to default)}
-
-  \item{key}{your PLoS API key, either enter, or loads from
+  \item{key}{Your PLoS API key, either enter, or loads from
   .Rprofile}
-
-  \item{...}{optional additional curl options (debugging
-  tools mostly)}
-
-  \item{curl}{If using in a loop, call getCurlHandle()
-  first and pass the returned value in here (avoids
-  unnecessary footprint)}
 }
 \value{
-  Number of search results (results = FALSE), or number of
-  search results plus the results themselves (results =
-  TRUE).
+  Subject content, in addition to any other fields
+  requested in a data.frame.
 }
 \description{
   Search PLoS Journals subjects.
 }
+\details{
+  See \url{http://www.plosone.org/taxonomy} for subject
+  areas.
+}
 \examples{
 \dontrun{
-plossubject('ecology', 'subject', 999, 'FALSE')
-plossubject('ecology', 'subject', 9, 'FALSE')
-plossubject('ecology',  limit = 5, results = 'TRUE')
-plossubject('ecology',  'subject', limit = 99, results = 'TRUE')
+plossubject('marine ecology', limit = 5)[,1:4]
+plossubject(terms='marine ecology',  fields = 'id,journal', limit = 20)
+plossubject('museums', fields = 'id,journal', toquery='doc_type:full', limit = 9)
+plossubject(terms='marine ecology', fields = 'id,journal', toquery=list('doc_type:full','!article_type_facet:"Issue\%20Image"'), limit = 9)
 }
 }
 
