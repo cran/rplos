@@ -1,30 +1,28 @@
 #' Search results on a keyword over all fields in PLoS Journals.
+#' 
 #' @import RJSONIO RCurl plyr ggplot2
 #' @param terms search terms (character)
 #' @param vis visualize results in bar plot or not (TRUE or FALSE)
-#' @param url the PLoS API url for the function (should be left to default)
 #' @param key your PLoS API key, either enter, or loads from .Rprofile
 #' @param ... optional additional curl options (debugging tools mostly)
 #' @param curl If using in a loop, call getCurlHandle() first and pass 
 #'  the returned value in here (avoids unnecessary footprint)
 #' @return Number of search results (vis = FALSE), or number of search in a table
 #'    and a histogram of results (vis = TRUE).
-#' @export
 #' @examples \dontrun{
 #' plosword('Helianthus')
 #' plosword(list('monkey','Helianthus','sunflower','protein','whale'), vis = 'TRUE')
-#' out <- plosword(list('monkey','Helianthus','sunflower','protein','whale'), vis = 'TRUE')
+#' out <- plosword(list('monkey','replication','design','sunflower','whale'), vis = 'TRUE')
 #' out[[1]] # results in a data frame 
 #' out[[2]] # results in a bar plot
 #' }
-plosword <- 
-
-function(terms, vis = FALSE,
-  url = 'http://api.plos.org/search',
+#' @export
+plosword <- function(terms, vis = FALSE,
   key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
-  ..., 
-  curl = getCurlHandle() ) 
+  ..., curl = getCurlHandle() ) 
 {
+	url = 'http://api.plos.org/search'
+	
   if (length(terms) == 1) {
   args <- list(apikey = key)
   if(!is.na(terms))
@@ -59,7 +57,7 @@ function(terms, vis = FALSE,
     temp$Term <- as.character(temp$Term)
       if (vis == "TRUE") {
         if(!require(ggplot2)) stop("must first install 'ggplot2' package.")
-        p <- ggplot(temp, aes(x=Term, y=No_Articles)) + geom_bar()
+        p <- ggplot(temp, aes(x=Term, y=No_Articles)) + geom_bar(stat="identity")
       }
     return(list(table = temp, plot = p))
   }

@@ -1,29 +1,27 @@
 #' Plot results through time for serach results from PLoS Journals.
-#' @import RJSONIO RCurl plyr stringr ggplot2 reshape2 googleVis
+#' 
+#' @import RJSONIO RCurl plyr stringr ggplot2 googleVis reshape
 #' @param terms search terms (character)
 #' @param limit number of results to return (integer)
 #' @param gvis use google visualization via the googleVis package (logical)
-#' @param url the PLoS API url for the function (should be left to default)
 #' @param key your PLoS API key, either enter, or loads from .Rprofile
 #' @param ... optional additional curl options (debugging tools mostly)
 #' @param curl If using in a loop, call getCurlHandle() first and pass 
 #'  the returned value in here (avoids unnecessary footprint)
 #' @return Number of search results (vis = FALSE), or number of search in a table
 #'    and a histogram of results (vis = TRUE).
-#' @export
 #' @examples \dontrun{
-#' plot_throughtime('phylogeny', 300, gvis=FALSE)
+#' plot_throughtime('phylogeny', 300)
 #' plot_throughtime(list('drosophila','monkey'), 100)
 #' plot_throughtime(list('drosophila','flower'), 100, TRUE)
 #' }
-plot_throughtime <- 
-
-function(terms, limit = NA, gvis = FALSE,
-  url = "http://api.plos.org/search",
+#' @export
+plot_throughtime <- function(terms, limit = NA, gvis = FALSE,
   key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
-  ..., 
-  curl = getCurlHandle() ) 
+  ..., curl = getCurlHandle() ) 
 {
+	url = "http://api.plos.org/search"
+	
   if (length(terms) == 1) {
   args <- list(api_key = key)
   if(!is.na(terms))
@@ -49,8 +47,8 @@ function(terms, limit = NA, gvis = FALSE,
   p <- ggplot(tsum, aes(x = dateplot, y = V1)) + 
     geom_line(colour = "red") +
     theme_bw() +
-    labs(x = "", y = "Number of articles matching search term(s)\n") +
-    opts(title = paste("PLoS search of ", terms, " using the rplos package"))
+    labs(x = "", y = "Number of articles matching search term(s)\n", 
+    		 title = paste("PLoS search of ", terms, " using the rplos package"))
   return(p)
   }
   else {
@@ -64,7 +62,7 @@ function(terms, limit = NA, gvis = FALSE,
       args$wt <- "json"
       tt <- getForm(url, 
         .params = args,
-#         ...,
+        ...,
         curl = curl)
       jsonout <- fromJSON(I(tt))
       tempresults <- jsonout$response$docs
@@ -86,9 +84,9 @@ function(terms, limit = NA, gvis = FALSE,
       pp <- ggplot(temp2m, aes(x = dateplot, y = value, group = variable, colour = variable)) + 
         geom_line() +
         theme_bw() +
-        labs(x = "", y = "Number of articles matching search term(s)\n") +
-        opts(title = paste("PLoS search of", paste(as.character(terms), collapse=","), "using the rplos package"),
-          legend.position = c(0.35, 0.8)) 
+        labs(x = "", y = "Number of articles matching search term(s)\n",
+        		 title = paste("PLoS search of", paste(as.character(terms), collapse=","), "using the rplos package")) +
+        theme(legend.position = c(0.35, 0.8))
       return(pp)
       }
     else {

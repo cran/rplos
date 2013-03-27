@@ -2,9 +2,7 @@
 \alias{crossref}
 \title{Lookup article info via CrossRef with DOI.}
 \usage{
-  crossref(doi, title = FALSE,
-    url = "http://www.crossref.org/openurl/",
-    key = getOption("CrossRefKey", stop("need an API key for Mendeley")),
+  crossref(doi, title = FALSE, key = "cboettig@gmail.com",
     ..., curl = getCurlHandle())
 }
 \arguments{
@@ -13,9 +11,6 @@
 
   \item{title}{return the title of the paper or not
   (defaults to FALSE)}
-
-  \item{url}{the PLoS API url for the function (should be
-  left to default)}
 
   \item{key}{your PLoS API key, either enter, or loads from
   .Rprofile}
@@ -28,15 +23,16 @@
   unnecessary footprint)}
 }
 \value{
-  Metadata from DOI.
+  Metadata from DOI in R's bibentry format.
 }
 \description{
   Lookup article info via CrossRef with DOI.
 }
 \examples{
 \dontrun{
-crossref("10.3998/3336451.0009.101")
-crossref("10.3998/3336451.0009.101", TRUE)
+crossref(doi="10.1371/journal.pone.0042793")
+print(crossref("10.3998/3336451.0009.101"), style="Bibtex")
+print(crossref("10.3998/3336451.0009.101"), style="text")
 }
 }
 
