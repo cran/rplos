@@ -1,6 +1,7 @@
 #' Search results on a keyword over all fields in PLoS Journals.
 #' 
-#' @import RJSONIO RCurl plyr ggplot2
+#' @import RJSONIO RCurl ggplot2
+#' @importFrom plyr ldply 
 #' @param terms search terms (character)
 #' @param vis visualize results in bar plot or not (TRUE or FALSE)
 #' @param key your PLoS API key, either enter, or loads from .Rprofile
@@ -11,8 +12,10 @@
 #'    and a histogram of results (vis = TRUE).
 #' @examples \dontrun{
 #' plosword('Helianthus')
-#' plosword(list('monkey','Helianthus','sunflower','protein','whale'), vis = 'TRUE')
-#' out <- plosword(list('monkey','replication','design','sunflower','whale'), vis = 'TRUE')
+#' plosword(list('monkey','Helianthus','sunflower','protein','whale'), 
+#'    vis = 'TRUE')
+#' out <- plosword(list('monkey','replication','design','sunflower','whale'), 
+#'    vis = 'TRUE')
 #' out[[1]] # results in a data frame 
 #' out[[2]] # results in a bar plot
 #' }
@@ -21,6 +24,8 @@ plosword <- function(terms, vis = FALSE,
   key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
   ..., curl = getCurlHandle() ) 
 {
+  Term = NULL
+  No_Articles = NULL
 	url = 'http://api.plos.org/search'
 	
   if (length(terms) == 1) {

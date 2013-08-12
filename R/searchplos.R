@@ -1,49 +1,55 @@
 #' Base function to search PLoS Journals
 #' 
 #' @import RJSONIO RCurl
-#' @param terms search terms (character)
-#' @param fields fields to return from search (character) [e.g., 'id,title'], 
-#'    any combination of search fields [type 'data(plosfields)', then 
-#'    'plosfields']
-#' @param toquery list specific fields to query (if NA, all queried)
-#' @param start record to start at (used in combination with limit when 
-#' you need to cycle through more results than the max allowed=1000)
-#' @param limit number of results to return (integer)
-#' @param returndf Return data.frame of results or not (defaults to TRUE).
-#' @param key your PLoS API key, either enter, or loads from .Rprofile
-#' @param ... optional additional curl options (debugging tools mostly)
-#' @param curl If using in a loop, call getCurlHandle() first and pass 
-#'  the returned value in here (avoids unnecessary footprint)
-#' @return Number of search results (vis = FALSE), or number of search in a table
-#'    and a histogram of results (vis = TRUE).
-#' @export
+#' @importFrom plyr ldply
+#' @importFrom stringr str_extract
+#' @importFrom lubridate now
+#' @template plos
+#' @return Either a data.frame if returndf=TRUE, or a list if returndf=FALSE.
 #' @examples \dontrun{
 #' searchplos('ecology', 'id,publication_date', limit = 2)
 #' searchplos('ecology', 'id,title', limit = 2)
 #' 
 #' # Get only full article DOIs
-#' searchplos(terms="*:*", fields='id', toquery='doc_type:full', start=0, limit=250)
+#' searchplos(terms="*:*", fields='id', toquery='doc_type:full', start=0, 
+#' limit=250)
 #' 
 #' # Get DOIs for only PLoS One articles
-#' searchplos(terms="*:*", fields='id', toquery='cross_published_journal_key:PLoSONE', start=0, limit=15)
+#' searchplos(terms="*:*", fields='id', 
+#' toquery='cross_published_journal_key:PLoSONE', start=0, limit=15)
 #' 
 #' # Get DOIs for full article in PLoS One
-#' searchplos(terms="*:*", fields='id', toquery=list('cross_published_journal_key:PLoSONE', 'doc_type:full'), start=0, limit=50)
+#' searchplos(terms="*:*", fields='id', 
+#'    toquery=list('cross_published_journal_key:PLoSONE', 'doc_type:full'), 
+#'    start=0, limit=50)
+#' 
+#' # Serch for many terms
+#' library(plyr)
+#' terms <- c('ecology','evolution','science')
+#' llply(terms, function(x) searchplos(x, limit=2))
 #' }
-searchplos <- function(terms = NA, fields = NA, toquery = NA, start = 0, limit = NA, 
-	returndf = TRUE, key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
-  ..., curl = getCurlHandle() ) 
+#' @export
+
+searchplos <- function(terms = NA, fields = 'id', toquery = NA, start = 0, 
+  limit = NA, returndf = TRUE, key = getOption("PlosApiKey", 
+  stop("need an API key for PLoS Journals")), sleep = 6, ..., 
+  curl = getCurlHandle())
 {
+  # Function to trim leading and trailing whitespace, including newlines
+  trim <- function (x) gsub("\\n\\s+", " ", gsub("^\\s+|\\s+$", "", x))
+  
+  # Enforce rate limits
+  if(!Sys.getenv('plostime') == ""){
+    timesince <- as.numeric(now()) - as.numeric(Sys.getenv('plostime'))
+    if(timesince < 6){
+#       assert_that(is.numeric(sleep))
+      stopifnot(is.numeric(sleep))
+      Sys.sleep(sleep)
+    }
+  }
+  
 	url = 'http://api.plos.org/search'
-	
-	insertnones <- function(x) {
-		toadd <- fields[! fields %in% names(x) ]
-		values <- rep("none", length(toadd))
-		names(values) <- toadd
-		values <- as.list(values)
-		x <- c(x, values)
-		x
-	}
+
 	if(is.na(limit)){limit <- 999} else{limit <- limit}
   args <- list()
   if(!is.na(toquery[[1]])) {
@@ -62,55 +68,61 @@ searchplos <- function(terms = NA, fields = NA, toquery = NA, start = 0, limit =
   args$wt <- "json"
   
 	argsgetnum <- list(q=terms, rows=0, wt="json", api_key=key)
-	getnum <- getForm(url, 
-		.params = argsgetnum,
-		curl = curl)
+	getnum <- getForm(url, .params = argsgetnum, curl = curl)
 	getnumrecords <- fromJSON(I(getnum))$response$numFound
 	if(getnumrecords > limit){getnumrecords <- limit} else{getnumrecords <- getnumrecords}
 	
-  if(min(getnumrecords, limit) < 1000) {
-    if(!is.na(limit))
-      args$rows <- limit
-    tt <- getForm(url, 
-      .params = args,
-      ...,
-      curl = curl)
-    jsonout <- fromJSON(I(tt))
-    tempresults <- jsonout$response$docs
-    tempresults <- llply(tempresults, insertnones)
-    if(returndf == TRUE){
-    	tempresults_ <- ldply(tempresults, function(x) as.data.frame(x))
-    } else
-    	{tempresults_ <- tempresults}
-    tempresults_
-  } else
-    { 
-    	getvecs <- seq(from=1, to=getnumrecords, by=500)
-    	lastnum <- as.numeric(str_extract(getnumrecords, "[0-9]{3}$"))-1
-    	if(lastnum > 500){
-    		lastnum <- getnumrecords-getvecs[length(getvecs)]
-    	} else 
-    		{lastnum <- lastnum}
-    	getrows <- c(rep(500, length(getvecs)-1), lastnum)
-      out <- list()
-    	message("Looping - printing iterations...")
-    	for(i in 1:length(getvecs)) {
-    		cat(i,"\n")
-    		args$start <- getvecs[i]
-    		args$rows <- getrows[i]
-    		tt <- getForm(url, 
-    			.params = args,
-    			...,
-    			curl = curl)
-    		jsonout <- fromJSON(I(tt))
-    		tempresults <- jsonout$response$docs 
-    		tempresults <- llply(tempresults, insertnones)
-    		out[[i]] <- tempresults
-    	}
-      if(returndf == TRUE){
-      	tempresults_ <- ldply(out, function(x) ldply(x, function(y) as.data.frame(y)))
-      } else
-      	{tempresults_ <- out}
-      tempresults_
-    }
+	if(min(getnumrecords, limit) < 1000) {
+	  if(!is.na(limit))
+	    args$rows <- limit
+	  tt <- getForm(url, .params = args, ..., curl = curl)
+	  jsonout <- fromJSON(I(tt))
+	  tempresults <- jsonout$response$docs
+# 	  tempresults <- llply(tempresults, insertnones)
+    # clean up whitespace and newlines
+# 	  tempresults <- lapply(tempresults, trim)
+	  tempresults <- lapply(tempresults, function(x) lapply(x, trim))
+	  if(returndf == TRUE){
+# 	    tempresults_ <- ldply(tempresults, function(x) as.data.frame(x))
+	    tempresults_ <- ldfast(tempresults, TRUE)
+	  } else
+	  {tempresults_ <- tempresults}
+	  
+	  return(tempresults_)
+	  
+	} else
+	{ 
+	  byby <- 1000
+	  
+	  getvecs <- seq(from=1, to=getnumrecords, by=byby)
+	  lastnum <- as.numeric(str_extract(getnumrecords, "[0-9]{3}$"))
+	  if(lastnum==0)
+	    lastnum <- byby
+	  if(lastnum > byby){
+	    lastnum <- getnumrecords-getvecs[length(getvecs)]
+	  } else 
+	  {lastnum <- lastnum}
+	  getrows <- c(rep(byby, length(getvecs)-1), lastnum)
+	  out <- list()
+	  message("Looping - printing iterations...")
+	  for(i in 1:length(getvecs)) {
+	    cat(i,"\n")
+	    args$start <- getvecs[i]
+	    args$rows <- getrows[i]
+	    tt <- getForm(url, .params = args,...,curl = curl)
+	    jsonout <- fromJSON(I(tt))
+	    tempresults <- jsonout$response$docs 
+# 	    tempresults <- llply(tempresults, insertnones)
+	    # clean up whitespace and newlines
+# 	    tempresults <- lapply(tempresults, trim)
+	    tempresults <- lapply(tempresults, function(x) lapply(x, trim))
+	    out[[i]] <- tempresults
+	  }
+	  if(returndf == TRUE){
+	    tempresults_ <- do.call(rbind.data.frame, lapply(out, function(x) do.call(rbind, x)))
+	  } else
+	  {tempresults_ <- out}
+	  return(tempresults_)
+	}
+  Sys.setenv(plostime = as.numeric(now()))
 }
