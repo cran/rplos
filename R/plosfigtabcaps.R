@@ -1,68 +1,20 @@
 #' Search PLoS Journals figure and table captions.
 #' 
-#' @import RJSONIO RCurl
-#' @param terms search terms
-#' @param fields fields to return from search (character) [e.g., 'id,title'], 
-#'    any combination of search fields [see plosfields$field]
-#' @param limit number of results to return (integer)
-#' @param key your PLoS API key, either enter, or loads from .Rprofile
-#' @param ... optional additional curl options (debugging tools mostly)
-#' @param curl If using in a loop, call getCurlHandle() first and pass 
-#'  	the returned value in here (avoids unnecessary footprint)
+#' @template plos
 #' @return Fields that you specify to return in a data.frame, along with the 
 #' 		DOI's found.
 #' @examples \dontrun{
-#' plosfigtabcaps('ecology', 'id', 500)
-#' plosfigtabcaps('ecology', 'figure_table_caption', 10)
+#' plosfigtabcaps('ecology', 'id', 100)
+#' plosfigtabcaps(terms='ecology', fields='figure_table_caption', limit=10)
 #' }
 #' @export
-plosfigtabcaps <- function(terms, fields = NA, limit = NA,
-  key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")),
-  ..., curl = getCurlHandle() ) 
-{
-	url = 'http://api.plos.org/search'
-	
-  args <- list(apikey = key)
-  if(!is.na(terms))
-    args$q <- paste('figure_table_caption:', terms, sep="")
-  if(!is.na(fields))
-    args$fl <- fields
-  args$wt <- "json"
-  
-  argsgetnum <- args
-  argsgetnum$rows <- 0
-  getnum <- getForm(url, 
-    .params = argsgetnum,
-    ...,
-    curl = curl)
-  getnumrecords <- fromJSON(I(getnum))$response$numFound
 
-  if(min(getnumrecords, limit) < 1000) {
-    if(!is.na(limit))
-      args$rows <- limit
-    tt <- getForm(url, 
-      .params = args,
-      ...,
-      curl = curl)
-    jsonout <- fromJSON(I(tt))
-    tempresults <- jsonout$response$docs
-    data.frame( do.call(rbind, tempresults) )
-  } else
-    { 
-      gotothis <- min(getnumrecords, limit)
-      getvecs <- seq(from=1, to=gotothis, by=500)
-      args$rows <- 500
-      dfresults_ <- list()
-      for(i in 1:length(getvecs)) {
-        args$start <- i
-        tt <- getForm(url, 
-          .params = args,
-          ...,
-          curl = curl)
-        jsonout <- fromJSON(I(tt))
-        tempresults <- jsonout$response$docs  
-        dfresults_[[i]] <- data.frame( do.call(rbind, tempresults) )
-      }
-      do.call(rbind, dfresults_)
-    }
+plosfigtabcaps <- function(terms = NA, fields = 'id', toquery = NA, start = 0, 
+  limit = NA, returndf = TRUE, sleep = 6, ..., curl = getCurlHandle(),
+  key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")))
+{
+  searchplos(terms=paste('figure_table_caption:', '"', terms, '"', sep=""), fields = fields, 
+             toquery = toquery, start = start, limit = limit, 
+             returndf = returndf, sleep = 6, ..., curl = getCurlHandle(),
+             key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")))
 }

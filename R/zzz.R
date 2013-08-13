@@ -3,9 +3,12 @@
 #' @param x a single list element with PLoS API returned nested elements
 #' @return data.frame of results, with authors concatenated to single vector.
 #' @export
+#' @keywords internal
 concat_todf <- function(x){
 	if(inherits(x$author_display, "character")){
-		if(length(x$author_display) > 1){x$author_display<-paste(x$author_display, collapse=", ")} else
+	  if(length(x$author_display) > 1){
+	    x$author_display<-paste(x$author_display, collapse=", ")
+	  } else
 		{x$author_display<-x$author_display}
 		data.frame(x)
 	} else
@@ -24,8 +27,9 @@ concat_todf <- function(x){
 #' @return A list with the missing element added with an 
 #' 		"na", if it is missing.
 #' @export
+#' @keywords internal
 addmissing <- function(x){
-	names_ <- names(x[[which.max(laply(x, length))]])
+	names_ <- names(x[[which.max(lapply(x, length))]])
 	
 	bbb <- function(x){
 		if(identical(names_[!names_ %in% names(x)], character(0))){x} else
@@ -48,6 +52,7 @@ addmissing <- function(x){
 #' getkey()
 #' } 
 #' @export
+#' @keywords internal
 getkey <- function(x = NULL) {	
 	if(is.null(x)){
 		key <- getOption("PlosApiKey")
@@ -61,4 +66,42 @@ getkey <- function(x = NULL) {
 	} else 
 		{ key <- x }
 	key
+}
+
+#' Replacement function for ldply that should be faster in all cases. 
+#' 
+#' @importFrom plyr rbind.fill
+#' @param x A list.
+#' @param convertvec Convert a vector to a data.frame before rbind is called.
+#' @export
+#' @keywords internal
+ldfast <- function(x, convertvec=FALSE){
+  convert2df <- function(x){
+    if(!inherits(x, "data.frame")) 
+      data.frame(rbind(x))
+    else
+      x
+  }
+  
+  if(convertvec)
+    do.call(rbind.fill, lapply(x, convert2df))
+  else
+    do.call(rbind.fill, x)
+}
+
+#' Function to insert "none" character strings where NULL values found to 
+#' faciliate combining results
+#' 
+#' @export
+#' @keywords internal
+insertnones <- function(x) 
+{
+	fields = NULL
+	f2 <- strsplit(fields, ",")[[1]]
+	toadd <- f2[! f2 %in% names(x) ]
+	values <- rep("none", length(toadd))
+	names(values) <- toadd
+	values <- as.list(values)
+	x <- c(x, values)
+	x
 }

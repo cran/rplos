@@ -1,6 +1,6 @@
 #' Format a URL for a specific article in a specific PLoS journal. 
 #' 
-#' @import stringr
+#' @importFrom stringr str_replace
 #' @param doi digital object identifier for an article in PLoS Journals
 #' @param journal quoted journal name (character)
 #' @return Get url for the article to use in your browser, etc.
@@ -8,10 +8,11 @@
 #'    will be inclued in the built URL.  Options are:
 #'    PLoSBiology, PLoSGenetics, PLoSComputationalBiology, PLoSMedicine,
 #'	  PLoSONE, PLoSNeglectedTropicalDiseases, or PLoSPathogens.
-#' @export
 #' @examples \dontrun{
 #' formatarticleurl("10.1371/journal.pone.0004045", 'PLoSONE')
 #' }
+#' @export
+#' @keywords internal
 formatarticleurl <- function(doi, journal) 
 {
   journalUrls <- c(  # string with all journal base url's
