@@ -1,6 +1,6 @@
 Package: rplos
-Version: 0.2.0
-Date: 2013-08-12
+Version: 0.3.0
+Date: 2013-09-17
 Description: A programmatic interface to the
     Web Service methods provided by the Public Library
     of Science journals for search.
@@ -17,19 +17,19 @@ BugReports: http://www.github.com/ropensci/rplos/issues
 LazyLoad: yes
 LazyData: yes
 Depends: ggplot2
-Imports: RCurl, RJSONIO, XML, plyr, stringr, googleVis, httr, grid,
-        gridExtra, lubridate, reshape2
+Imports: RCurl, RJSONIO, XML, plyr, stringr, googleVis, httr,
+        lubridate, reshape2
 Suggests: roxygen2, testthat
 Collate: 'crossref.R' 'formatarticleurl.R' 'help.R' 'journalnamekey.R'
         'plosabstract.R' 'plosauthor.R' 'plosfields.R'
         'plosfigtabcaps.R' 'plossubject.R' 'plostitle.R' 'plosviews.R'
         'plosword.R' 'plot_throughtime.R' 'searchplos.R' 'crossref_r.R'
         'zzz.R' 'startup.R'
-Packaged: 2013-08-12 21:22:56 UTC; scottmac2
+Packaged: 2013-09-17 20:35:37 UTC; scottmac2
 Author: Scott Chamberlain [aut, cre],
   Carl Boettiger [aut],
   Karthik Ram [aut]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-08-13 00:14:54
+Date/Publication: 2013-09-18 08:42:03
