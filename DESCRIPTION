@@ -1,6 +1,6 @@
 Package: rplos
-Version: 0.3.0
-Date: 2013-09-17
+Version: 0.3.6
+Date: 2013-11-12
 Description: A programmatic interface to the
     Web Service methods provided by the Public Library
     of Science journals for search.
@@ -25,11 +25,11 @@ Collate: 'crossref.R' 'formatarticleurl.R' 'help.R' 'journalnamekey.R'
         'plosfigtabcaps.R' 'plossubject.R' 'plostitle.R' 'plosviews.R'
         'plosword.R' 'plot_throughtime.R' 'searchplos.R' 'crossref_r.R'
         'zzz.R' 'startup.R'
-Packaged: 2013-09-17 20:35:37 UTC; scottmac2
+Packaged: 2013-11-12 17:05:21 UTC; scottmac2
 Author: Scott Chamberlain [aut, cre],
   Carl Boettiger [aut],
   Karthik Ram [aut]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-09-18 08:42:03
+Date/Publication: 2013-11-12 18:52:34
