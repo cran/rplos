@@ -1,8 +1,8 @@
 # tests for searchplos fxn in rplos
 context("searchplos")
 
-dat1 <- searchplos('ecology', 'id,publication_date', limit = 2)
-dat2 <- searchplos(terms="*:*", fields='id', toquery='cross_published_journal_key:PLoSONE', start=0, limit=15)
+dat1 <- searchplos('ecology', 'id,publication_date', limit = 2, key = "hello")
+dat2 <- searchplos(q="*:*", fl='id', fq='cross_published_journal_key:PLoSONE', start=0, limit=15, key = "hello")
 
 test_that("searchplos returns the correct dimensions", {
 	expect_that(nrow(dat1), equals(2))
@@ -20,4 +20,8 @@ test_that("searchplos returns the correct class", {
 
 test_that("searchplos returns the correct value", {
   expect_that(grepl('10.1371', dat2[1,1]), is_true())
+})
+
+test_that("searchplos catches bad limit param", {
+  expect_error(searchplos(q="*:*", limit = "a", key = "hello"), "limit should be a numeric")
 })

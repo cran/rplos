@@ -1,86 +1,107 @@
 #' Base function to search PLoS Journals
 #' 
-#' @import RCurl
+#' @export
+#' @import data.table assertthat
 #' @importFrom plyr ldply
 #' @importFrom stringr str_extract
 #' @importFrom lubridate now
 #' @importFrom RJSONIO fromJSON
 #' @template plos
-#' @return Either a data.frame if returndf=TRUE, or a list if returndf=FALSE.
+#' @return An object of class "plos", with a list of length two, each element being 
+#' a list itself.
 #' @examples \dontrun{
-#' searchplos('ecology', 'id,publication_date', limit = 2)
-#' searchplos('ecology', 'id,title', limit = 2)
+#' searchplos(q='ecology', fl=c('id','publication_date'), limit = 2)
+#' searchplos('ecology', fl=c('id','publication_date'), limit = 2)
+#' searchplos('ecology', c('id','title'), limit = 2)
 #' 
 #' # Get only full article DOIs
-#' searchplos(terms="*:*", fields='id', toquery='doc_type:full', start=0, 
-#' limit=250)
+#' out <- searchplos(q="*:*", fl='id', fq='doc_type:full', start=0, limit=250)
+#' head(out)
 #' 
 #' # Get DOIs for only PLoS One articles
-#' searchplos(terms="*:*", fields='id', 
-#' toquery='cross_published_journal_key:PLoSONE', start=0, limit=15)
+#' out <- searchplos(q="*:*", fl='id', fq='cross_published_journal_key:PLoSONE', start=0, limit=15)
+#' head(out)
 #' 
 #' # Get DOIs for full article in PLoS One
-#' searchplos(terms="*:*", fields='id', 
-#'    toquery=list('cross_published_journal_key:PLoSONE', 'doc_type:full'), 
-#'    start=0, limit=50)
+#' out <- searchplos(q="*:*", fl='id', fq=list('cross_published_journal_key:PLoSONE', 
+#'    'doc_type:full'), limit=50)
+#' head(out)
 #' 
-#' # Serch for many terms
-#' library(plyr)
-#' terms <- c('ecology','evolution','science')
-#' llply(terms, function(x) searchplos(x, limit=2))
+#' # Serch for many q
+#' q <- c('ecology','evolution','science')
+#' lapply(q, function(x) searchplos(x, limit=2))
 #' 
 #' # Query to get some PLOS article-level metrics, notice difference between two outputs
-#' out <- searchplos(terms="*:*", fields='id,counter_total_all,alm_twitterCount', 
-#'    toquery='doc_type:full')
-#' out_sorted <- searchplos(terms="*:*", fields='id,counter_total_all,alm_twitterCount', 
-#'    toquery='doc_type:full', sort='counter_total_all desc')
+#' out <- searchplos(q="*:*", fl=c('id','counter_total_all','alm_twitterCount'),fq='doc_type:full')
+#' out_sorted <- searchplos(q="*:*", fl=c('id','counter_total_all','alm_twitterCount'), 
+#'    fq='doc_type:full', sort='counter_total_all desc')
 #' head(out)
-#' head(out_sorted) 
+#' head(out_sorted)
 #' 
 #' # A list of articles about social networks that are popular on a social network
-#' searchplos(terms="*:*", fields='id,alm_twitterCount', 
-#'    toquery=list('doc_type:full','subject:"Social networks"',
-#'                 'alm_twitterCount:[100 TO 10000]'), 
+#' searchplos(q="*:*",fl=c('id','alm_twitterCount'), 
+#'    fq=list('doc_type:full','subject:"Social networks"','alm_twitterCount:[100 TO 10000]'), 
 #'    sort='counter_total_month desc')
 #'                  
 #' # Show me all articles that have these two words less then about 15 words apart.
-#' searchplos(terms='everything:"sports alcohol"~15', fields='title', toquery='doc_type:full')
+#' searchplos(q='everything:"sports alcohol"~15', fl='title', fq='doc_type:full')
 #' 
 #' # Now let's try to narrow our results to 7 words apart. Here I'm changing the ~15 to ~7
-#' searchplos(terms='everything:"sports alcohol"~7', fields='title', toquery='doc_type:full')
+#' searchplos(q='everything:"sports alcohol"~7', fl='title', fq='doc_type:full')
 #' 
 #' # Now, lets also only look at articles that have seen some activity on twitter. 
-#' # Add "fq=alm_twitterCount:[1 TO *]" as a parameter within the toquery argument.
-#' searchplos(terms='everything:"sports alcohol"~7', fields='alm_twitterCount,title', 
-#'    toquery=list('doc_type:full','alm_twitterCount:[1 TO *]'))
-#' searchplos(terms='everything:"sports alcohol"~7', fields='alm_twitterCount,title', 
-#'    toquery=list('doc_type:full','alm_twitterCount:[1 TO *]'), 
+#' # Add "fq=alm_twitterCount:[1 TO *]" as a parameter within the fq argument.
+#' searchplos(q='everything:"sports alcohol"~7', fl=c('alm_twitterCount','title'), 
+#'    fq=list('doc_type:full','alm_twitterCount:[1 TO *]'))
+#' searchplos(q='everything:"sports alcohol"~7', fl=c('alm_twitterCount','title'), 
+#'    fq=list('doc_type:full','alm_twitterCount:[1 TO *]'), 
 #'    sort='counter_total_month desc')
+#'    
+#' # Return partial doc parts
+#' ## Return Abstracts only
+#' out <- searchplos(q='*:*', fl=c('doc_partial_body','doc_partial_parent_id'), 
+#'    fq=list('doc_type:partial', 'doc_partial_type:Abstract'), limit=3)
+#' ## Return Title's only
+#' out <- searchplos(q='*:*', fl=c('doc_partial_body','doc_partial_parent_id'), 
+#'    fq=list('doc_type:partial', 'doc_partial_type:Title'), limit=3)
+#'    
+#' # Remove DOIs for annotations (i.e., corrections)
+#' searchplos(q='*:*', fl=c('id','article_type'), 
+#'    fq='-article_type:correction', limit=100)
 #' 
-#' # Highlighting!! What is that? Setting highlighting=TRUE gives you back the usual 
-#' # fields you want, plus a separate data.frame of the places where the search terms
-#' # were found
-#' searchplos(terms='everything:"sports alcohol"~7', fields='alm_twitterCount,title', 
-#'    toquery=list('doc_type:full','alm_twitterCount:[1 TO *]'), highlighting=TRUE)
-#' 
-#' # Highlighting with lots of results
-#' out <- searchplos(terms='everything:"experiment"', fields='id,title', 
-#'    toquery='doc_type:full', limit=1100, highlighting = TRUE)
-#' lapply(out, head)
+#' # Remove DOIs for annotations (i.e., corrections) and Viewpoints articles
+#' searchplos(q='*:*', fl=c('id','article_type'), 
+#'    fq=list('-article_type:correction','-article_type:viewpoints'), limit=100)
+#'    
+#' # Get eissn codes
+#' searchplos(q='*:*', fl=c('id','journal','eissn','cross_published_journal_eissn'), 
+#'    fq="doc_type:full", limit = 60)   
 #' }
-#' @export
 
-searchplos <- function(terms = NA, fields = 'id', toquery = NA, sort = NA, 
-  highlighting = FALSE, start = 0, limit = NA, returndf = TRUE, 
-  key = getOption("PlosApiKey", stop("need an API key for PLoS Journals")), 
-  sleep = 6, curl = getCurlHandle(), callopts=list())
+searchplos <- function(q = NULL, fl = 'id', fq = NULL, sort = NULL, start = 0, limit = 10, 
+  key = NULL, sleep = 6, callopts=list(), terms=NULL, fields=NULL, toquery=NULL)
 {
+#   calls <- deparse(sys.calls())
+  calls <- names(sapply(match.call(), deparse))[-1]
+  calls_vec <- c("terms", "fields", "toquery") %in% calls
+#   calls_vec <- sapply(c("terms", "fields", "toquery"), function(x) grepl(x, calls))
+  if(any(calls_vec))
+    stop("The parameters terms, fields, and toquery have been replaced with q, fl, and fq, respectively")
+  
+  # Key
+  if(is.null(key)) 
+    key <- getOption("PlosApiKey", stop("need an API key for PLoS Journals"))
+  
   # Function to trim leading and trailing whitespace, including newlines
   trim <- function (x) gsub("\\n\\s+", " ", gsub("^\\s+|\\s+$", "", x))
   
-  # Function to get rid of html code stuff in highlighting outputs
-  parsehighlight <- function(x) if(length(x) == 0){ NA } else { gsub("<[^>]+>","",x[[1]]) }
-#   parsehighlight <- function(x) gsub("<[^>]+>","",x)
+  # Make sure limit is a numeric or integer
+  limit <- tryCatch(as.numeric(as.character(limit)), warning=function(e) e)
+  if("warning" %in% class(limit)){
+    stop("limit should be a numeric or integer class value")
+  }
+  if(!is(limit, "numeric") | is.na(limit))
+    stop("limit should be a numeric or integer class value")
   
   # Enforce rate limits
   if(!Sys.getenv('plostime') == ""){
@@ -93,53 +114,33 @@ searchplos <- function(terms = NA, fields = 'id', toquery = NA, sort = NA,
   
 	url = 'http://api.plos.org/search'
   
-  # If highlighting=TRUE, then force id to be retuned so results can be matched easily
-  if(highlighting){  
-    if(!grepl("id", fields))
-      fields <- paste(fields, 'id', sep=",")
-  }
-  
-	if(is.na(limit)){limit <- 999} else{limit <- limit}
   args <- list()
-  if(!is.na(toquery[[1]])) {
-    if(length(toquery)==1) {
-      args$fq <- toquery
-    } else
-    {
-      args <- toquery
-      names(args) <- rep("fq",length(args))
+  if(!is.null(fq[[1]])) {
+    if(length(fq)==1) { args$fq <- fq } else {
+      args <- fq; names(args) <- rep("fq",length(args))
     } 
-  } else
-  { NULL }
-  args$api_key <- key
-  if(!is.na(terms))
-    args$q <- terms
-	if(!any(is.na(fields)))
-    args$fl <- paste(fields, collapse=",")
-  if(!is.na(start))
-    args$start <- start
-  if(!is.na(limit))
-    args$rows <- limit
-  if(!is.na(sort))
-    args$sort <- sort
-  if(!is.na(highlighting))
-    args$hl <- tolower(highlighting)
-  args$wt <- "json"
+  } else { NULL }
+
+	if(is.null(limit)){limit <- 999} else{limit <- limit}
+  fl <- paste(fl, collapse=",")
+  args <- c(args, ploscompact(list(api_key=key, q=q, fl=fl, start=start, rows=limit, sort=sort, wt='json')))
   
-	argsgetnum <- list(q=terms, rows=0, wt="json", api_key=key)
-	getnum <- getForm(url, .params = argsgetnum, curl = curl, .encoding=)
-	getnumrecords <- fromJSON(I(getnum))$response$numFound
+	argsgetnum <- list(q=q, rows=0, wt="json", api_key=key)
+	getnum_tmp <- GET(url, query = argsgetnum)
+  stop_for_status(getnum_tmp)
+  getnum <- content(getnum_tmp)
+	getnumrecords <- getnum$response$numFound
 	if(getnumrecords > limit){getnumrecords <- limit} else{getnumrecords <- getnumrecords}
 	
 	if(min(getnumrecords, limit) < 1000) {
-	  if(!is.na(limit))
+	  if(!is.null(limit))
 	    args$rows <- limit
-	  tt <- getForm(url, .params = args, .opts=callopts, curl = curl)
-	  jsonout <- fromJSON(I(tt))
+	  tt <- GET(url, query=args, callopts)
+    jsonout <- check_response(tt)
 	  tempresults <- jsonout$response$docs
 	  tempresults <- lapply(tempresults, function(x) lapply(x, trim))
     
-    # replace any empty lists with some data
+	  # remove any empty lists
 	  tempresults <- tempresults[!sapply(tempresults, length) == 0]
     
     # combine results if more than length=1
@@ -150,25 +151,11 @@ searchplos <- function(terms = NA, fields = 'id', toquery = NA, sort = NA,
       }      
       tempresults <- lapply(tempresults, function(x) lapply(x, foo))
     }
+
+    res <- tempresults
     
-	  if(returndf){
-      dat <- do.call(rbind.fill, lapply(tempresults, function(x) data.frame(x, stringsAsFactors=FALSE)))
-      hldt <- ldply(lapply(jsonout$highlighting, parsehighlight))
-      if(highlighting){
-        return( list(data=dat, highlighting=hldt) )
-      } else
-      {
-        return( dat )
-      }
-	  } else
-	    { 
-        if(highlighting){
-          return( list(data=tempresults, highlighting=jsonout$highlighting) )
-        } else
-        {
-          return( tempresults )
-        }
-	    }
+	  resdf  <- plos2df(res)
+    return( resdf )
 	} else
 	{ 
 	  byby <- 500
@@ -188,12 +175,11 @@ searchplos <- function(terms = NA, fields = 'id', toquery = NA, sort = NA,
 	    args$start <- getvecs[i]
 	    args$rows <- getrows[i]
 	    tt <- GET(url, query=args, callopts)
-      stop_for_status(tt)
-	    jsonout <- content(tt)
+	    jsonout <- check_response(tt)
 	    tempresults <- jsonout$response$docs
 	    tempresults <- lapply(tempresults, function(x) lapply(x, trim))
       
-	    # replace any empty lists with some data
+	    # remove any empty lists
 	    tempresults <- tempresults[!sapply(tempresults, length) == 0]
 	    
 	    # combine results if more than length=1
@@ -204,28 +190,39 @@ searchplos <- function(terms = NA, fields = 'id', toquery = NA, sort = NA,
 	      }      
 	      tempresults <- lapply(tempresults, function(x) lapply(x, foo))
 	    }
-      
-	    hlres <- jsonout$highlighting
-	    out[[i]] <- list(dat=tempresults, hl=hlres)
+      out[[i]] <- tempresults
 	  }
-	  if(returndf){
-	    dat <- do.call(rbind.data.frame, lapply(lapply(out, "[[", "dat"), function(x) do.call(rbind, lapply(x, function(x) data.frame(x, stringsAsFactors=FALSE)) ) ))
-	    hldt <- do.call(rbind.fill, lapply(lapply(out, "[[", "hl"), function(x) ldply(lapply(x, parsehighlight)) ))
-	    if(highlighting){
-	      return( list(data=dat, highlighting=hldt) )
-	    } else
-	    {
-	      return( dat )
-	    }
-	  } else
-	  {
-	    if(highlighting){
-	      return( list(data=lapply(out, "[[", "dat"), highlighting=lapply(out, "[[", "hl")) )
-	    } else
-	    {
-	      return( tempresults )
-	    }
-	  }
+	  
+	  resdf  <- plos2df(out, TRUE)
+	  return( resdf )
 	}
   Sys.setenv(plostime = as.numeric(now()))
+}
+
+plos2df <- function(input, many=FALSE)
+{  
+  if(many){
+    input <- do.call(c, input)
+  }
+  
+  if(is.null(input)){
+    datout <- NULL
+  } else{  
+    if(length(input) == 0){
+      datout <- NA
+    } else{
+      maxlendat <- max(sapply(input, length))
+      namesdat <- names(input[which.max(sapply(input, length))][[1]])
+      dat <- lapply(input, function(x){
+        if(!length(x) < maxlendat){ x } else {
+          fillnames <- namesdat[!namesdat %in% names(x)]
+          tmp <- c(rep("none", length(fillnames)), x)
+          names(tmp)[seq_along(fillnames)] <- fillnames
+          tmp[match(namesdat, names(tmp))]
+        }
+      })
+      datout <- data.frame(rbindlist(dat), stringsAsFactors = FALSE)
+    }
+  }
+  return( datout ) 
 }

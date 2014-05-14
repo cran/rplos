@@ -1,16 +1,39 @@
+rplos 0.4.0
+------------
+
+NEW FEATURES
+
+* Errors from the data provider are reported now. At least we attempt to do so when they are given, for example if you specify `asc` or `desc` incorrectly with the `sort` parameter. See the [`check_response()` function](https://github.com/ropensci/rplos/blob/master/tests/testthat/test-check_response.R) for examples.
+* New functions `facetplos()` and `highplos()` using the `solr` R wrapper to the Solr indexing engine. The PLOS API just exposes the Solr endpoints, so we can use the general Solr wrapper package `solr` to allow more flexible Solr searching.
+* New function `highbrow()` to visualize highlighting results in a browser.
+* New function `plos_fulltext()` to get full text xml of PLOS articles. Helper function `full_text_urls()` constructs the URL's for full text xml.
+
+BUG FIXES
+
+* Fixed bug in tests where we forgot to give a key. No key is required per se, but PLOS encourages it so we prevent a call from happening without at least a dumby key.
+* Added function `check_response()` to check responses from the PLOS API, deals with capturing server error messages, and checking for correct content type, etc.
+
+IMPROVEMENTS
+
+* Removed function `crossref_r()` as we are working on a package for the CrossRef API.
+* Parameter arguments in `searchplos()`, `plosauthor()`, `plosfigtabcaps()`, `plossubject()`, and `plostitle()` were changed to match closer the Solr parameter names. `terms` to `q`. `fields` to `fl`. `toquery` to `fq`.
+* Multiple values passed to `fields `
+* `returndf` parameter is gone from `searchplos()`, `plosauthor()`, `plosfigtabcaps()`, `plossubject()`, and `plostitle()`. You can easily get raw JSON, etc. data using the `solr` package.
+* Now using `httr` instead of `RCurl` in `plosviews()` function.
+
 rplos 0.3.6
 ------------
 
 NEW FEATURES
 
 * All search functions (searchplos(), plosabstract(), plosauthor(), plosfigtabcaps(), plossubject(), and plostitle()) gain highlighting argument, setting to TRUE (default=FALSE) returns matching sentence fragments that were matched. NOTE that if highlighting=TRUE the output can be a list of data.frame's if returndf=TRUE, with two named elements 'data' and 'highlighting', or a list of lists if returndf=FALSE.
-* All search functions (searchplos(), plosabstract(), plosauthor(), plosfigtabcaps(), plossubject(), and plostitle()) gain sort argument. You can pass a field to sort by even if you don't return that field in the output, e.g., sort='counter_total_month desc'. 
+* All search functions (searchplos(), plosabstract(), plosauthor(), plosfigtabcaps(), plossubject(), and plostitle()) gain sort argument. You can pass a field to sort by even if you don't return that field in the output, e.g., sort='counter_total_month desc'.
 * A tiny function parsehighlight() added to parse out html code from highlighting output.
 
 BUG FIXES
 
 * Some examples in docs didn't work - fixed them.
-* Fixed bug in searchplos() that was causing elements of a return field to cause failure because they were longer than 1 (e.g., authors). Now concatenating elements of length > 1. 
+* Fixed bug in searchplos() that was causing elements of a return field to cause failure because they were longer than 1 (e.g., authors). Now concatenating elements of length > 1.
 * Fixed bug in searchplos() that was causing elements of length 0 to cause failure. Now removing elements of length 0.
 * Fixed parsehighlight function to return NA if highlighting return of length 0.
 * Fixed broken test for plosauthor(), plosabstract(), and plot_throughtime().
@@ -89,7 +112,7 @@ NEW FUNCTIONS
 
 * `almplotallviews` changed to `almplot`.
 
-* `almevents` added to specifically search and get detailed events data for a specific source or N sources. 
+* `almevents` added to specifically search and get detailed events data for a specific source or N sources.
 
 * `crossref_r` gets 20 random DOIs from Crossref.org.
 
@@ -103,9 +126,9 @@ rplos 0.0-7
 
 IMPROVEMENTS AND BUG FIXES
 
-* ALM functions (any functions starting with alm) received updated arguments/parameters according to the ALM API version 3.0 changes. 
+* ALM functions (any functions starting with alm) received updated arguments/parameters according to the ALM API version 3.0 changes.
 
-* Bug fixes in general across library. 
+* Bug fixes in general across library.
 
 * Added tests.
 
@@ -138,6 +161,6 @@ NEW FUNCTIONS
 rplos 0.0-1
 ===============
 
-NEW FEATURES 
+NEW FEATURES
 
 * released to CRAN

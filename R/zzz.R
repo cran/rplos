@@ -1,5 +1,5 @@
 #' Concatenate author names, if present, used in other functions.
-#' 
+#'
 #' @param x a single list element with PLoS API returned nested elements
 #' @return data.frame of results, with authors concatenated to single vector.
 #' @export
@@ -20,17 +20,17 @@ concat_todf <- function(x){
 	data.frame(x)
 }
 
-#' Adds elements in a list that are missing because they were not returned 
+#' Adds elements in a list that are missing because they were not returned
 #' in the PLoS API call.
-#' 
+#'
 #' @param x A list with PLoS API returned nested elements
-#' @return A list with the missing element added with an 
+#' @return A list with the missing element added with an
 #' 		"na", if it is missing.
 #' @export
 #' @keywords internal
 addmissing <- function(x){
 	names_ <- names(x[[which.max(lapply(x, length))]])
-	
+
 	bbb <- function(x){
 		if(identical(names_[!names_ %in% names(x)], character(0))){x} else
 		{
@@ -42,59 +42,12 @@ addmissing <- function(x){
 	lapply(x, bbb)
 }
 
-#' Function to get an API key. 
-#' 
-#' Checks first to get key from your .Rprofile file for an API key with the name
-#' 		'PlosApiKey'. If it is not found, the default guest key is used. 
-#' 
-#' @param x An API key, defaults to NULL.
-#' @examples \dontrun{
-#' getkey()
-#' } 
-#' @export
-#' @keywords internal
-getkey <- function(x = NULL) {	
-	if(is.null(x)){
-		key <- getOption("PlosApiKey")
-		
-		if(is.null(key)){
-			key <- "MUvThuaeRNV2cNs"
-			message("Using default key: Please get your own API key at http://api.plos.org/")
-		} else 
-			if(class(key)=="character"){key <- key} else 
-				{ stop("check your key input - it should be a character string") }
-	} else 
-		{ key <- x }
-	key
-}
-
-#' Replacement function for ldply that should be faster in all cases. 
-#' 
-#' @importFrom plyr rbind.fill
-#' @param x A list.
-#' @param convertvec Convert a vector to a data.frame before rbind is called.
-#' @export
-#' @keywords internal
-ldfast <- function(x, convertvec=FALSE){
-  convert2df <- function(x){
-    if(!inherits(x, "data.frame")) 
-      data.frame(rbind(x))
-    else
-      x
-  }
-  
-  if(convertvec)
-    do.call(rbind.fill, lapply(x, convert2df))
-  else
-    do.call(rbind.fill, x)
-}
-
-#' Function to insert "none" character strings where NULL values found to 
+#' Function to insert "none" character strings where NULL values found to
 #' faciliate combining results
-#' 
+#'
 #' @export
 #' @keywords internal
-insertnones <- function(x) 
+insertnones <- function(x)
 {
 	fields = NULL
 	f2 <- strsplit(fields, ",")[[1]]
@@ -104,4 +57,35 @@ insertnones <- function(x)
 	values <- as.list(values)
 	x <- c(x, values)
 	x
+}
+
+# plyr compact
+ploscompact <- function(l) Filter(Negate(is.null), l)
+
+#' Check response from PLOS, including status codes, server error messages, mime-type, etc.
+#' @export
+#' @import assertthat httr RJSONIO
+#' @keywords internal
+check_response <- function(x){
+  if(!x$status_code == 200){
+    stnames <- names(content(x))
+    if(!is.null(stnames)){
+      if('error' %in% stnames){
+        stop(sprintf("(%s) - %s", x$status_code, content(x)$error$msg), call. = FALSE)
+      } else { stop(sprintf("(%s)", x$status_code), call. = FALSE) }
+    } else { stop_for_status(x) }
+  }
+  assert_that(x$headers$`content-type` == 'application/json;charset=UTF-8')
+  res <- content(x, as = 'text', encoding = "UTF-8")
+  out <- RJSONIO::fromJSON(res)
+  if('response' %in% names(out)){
+    if(out$response$numFound == 0){ 
+      message("Sorry, no data found")
+      out 
+    }
+  } else {
+    if( class(try(out$response, silent=TRUE))=="try-error" | is.null(try(out$response, silent=TRUE)) )
+      stop("Sorry, no data found")
+  }
+  return( out )
 }
