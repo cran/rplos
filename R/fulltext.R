@@ -7,7 +7,7 @@
 #' full_text_urls(doi='10.1371/journal.pone.0086169')
 #' full_text_urls(doi='10.1371/journal.pbio.1001845')
 #' full_text_urls(doi=c('10.1371/journal.pone.0086169','10.1371/journal.pbio.1001845'))
-#' dois <- searchplos(q = "*:*", fq='doc_type:full', limit=20)$id
+#' dois <- searchplos(q = "*:*", fq='doc_type:full', limit=20)$data$id
 #' full_text_urls(dois)
 #' }
 
@@ -32,21 +32,22 @@ full_text_urls <- function(doi){
 #'
 #' @export
 #' @param doi One or more DOIs
-#' @param callopts Curl options passed on to httr::GET
+#' @param ... Curl options passed on to \code{\link[httr]{GET}}
+#' @param x Input to print method
 #' @return Character string of XML.
 #' @examples \dontrun{
 #' plos_fulltext(doi='10.1371/journal.pone.0086169')
 #' plos_fulltext(c('10.1371/journal.pone.0086169','10.1371/journal.pbio.1001845'))
-#' dois <- searchplos(q = "*:*", fq='doc_type:full', limit=20)$id
+#' dois <- searchplos(q = "*:*", fq='doc_type:full', limit=3)$data$id
 #' out <- plos_fulltext(dois)
-#' out['10.1371/journal.pone.0013747']
+#' out[dois[1]]
 #' out[1:2]
 #'
 #' # Extract text from the XML strings
 #' library("XML")
 #' lapply(out[2:3], function(x){
 #'  tmp <- xmlParse(x)
-#'  xpathApply(tmp, "//abstract", xmlValue)
+#'  xpathApply(tmp, "//ref-list")
 #' })
 #'
 #' # Make a text corpus
@@ -59,12 +60,12 @@ full_text_urls <- function(doi){
 #' (dtm <- DocumentTermMatrix(tmcorpus))
 #' findFreqTerms(dtm, lowfreq = 50)
 #' }
-plos_fulltext <- function(doi, callopts=list()){
+plos_fulltext <- function(doi, ...){
   urls <- full_text_urls(doi)
   getfulltext <- function(x){
-    out <- GET(x, list(), callopts)
+    out <- GET(x, list(), ...)
     warn_for_status(out)
-    assert_that(out$headers$`content-type` == 'text/xml')
+    stopifnot(out$headers$`content-type` == 'text/xml')
     content(out, as = "text")
   }
   res <- lapply(urls, getfulltext)
@@ -74,8 +75,6 @@ plos_fulltext <- function(doi, callopts=list()){
 }
 
 #' @export
-#' @param x Input, of class plosft
-#' @param ... Further args, ignored
 #' @rdname plos_fulltext
 print.plosft <- function(x, ...){
   namesprint <- paste(na.omit(names(x)[1:10]), collapse = " ")

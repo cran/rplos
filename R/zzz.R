@@ -1,3 +1,5 @@
+pbase <- function() 'http://api.plos.org/search'
+
 #' Concatenate author names, if present, used in other functions.
 #'
 #' @param x a single list element with PLoS API returned nested elements
@@ -64,7 +66,8 @@ ploscompact <- function(l) Filter(Negate(is.null), l)
 
 #' Check response from PLOS, including status codes, server error messages, mime-type, etc.
 #' @export
-#' @import assertthat httr RJSONIO
+#' @import httr
+#' @importFrom jsonlite fromJSON
 #' @keywords internal
 check_response <- function(x){
   if(!x$status_code == 200){
@@ -75,13 +78,13 @@ check_response <- function(x){
       } else { stop(sprintf("(%s)", x$status_code), call. = FALSE) }
     } else { stop_for_status(x) }
   }
-  assert_that(x$headers$`content-type` == 'application/json;charset=UTF-8')
+  stopifnot(x$headers$`content-type` == 'application/json;charset=UTF-8')
   res <- content(x, as = 'text', encoding = "UTF-8")
-  out <- RJSONIO::fromJSON(res)
+  out <- jsonlite::fromJSON(res, FALSE)
   if('response' %in% names(out)){
-    if(out$response$numFound == 0){ 
+    if(out$response$numFound == 0){
       message("Sorry, no data found")
-      out 
+      out
     }
   } else {
     if( class(try(out$response, silent=TRUE))=="try-error" | is.null(try(out$response, silent=TRUE)) )
@@ -89,3 +92,6 @@ check_response <- function(x){
   }
   return( out )
 }
+
+strextract <- function(str, pattern) regmatches(str, regexpr(pattern, str))
+strtrim <- function(str) gsub("^\\s+|\\s+$", "", str)

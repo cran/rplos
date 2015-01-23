@@ -1,12 +1,14 @@
 <!--
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{rplos tutorial}
+%\VignetteIndexEntry{rplos introduction}
 -->
 
-rplos tutorial
+rplos introduction
 =====
 
-The `rplos` package interacts with the API services of [PLoS](http://www.plos.org/) (Public Library of Science) Journals. In order to use `rplos`, you need to obtain [your own key](http://api.plos.org/registration/) to their API services. Instruction for obtaining and installing keys so they load automatically when you launch R are on our GitHub Wiki page [Installation and use of API keys](https://github.com/ropensci/rOpenSci/wiki/Installation-and-use-of-API-keys).
+
+
+The `rplos` package interacts with the API services of [PLoS](http://www.plos.org/) (Public Library of Science) Journals. You used to need an API key to work with this package - that is no longer needed!
 
 This tutorial will go through three use cases to demonstrate the kinds
 of things possible in `rplos`.
@@ -24,7 +26,7 @@ install.packages("rplos")
 
 
 ```r
-library(rplos)
+library('rplos')
 ```
 
 ### Search across PLoS papers in various sections of papers
@@ -38,12 +40,17 @@ searchplos(q= "Helianthus", fl= "id", limit = 5)
 ```
 
 ```
-##                             id
-## 1 10.1371/journal.pone.0057533
-## 2 10.1371/journal.pone.0045899
-## 3 10.1371/journal.pone.0037191
-## 4 10.1371/journal.pone.0051360
-## 5 10.1371/journal.pone.0070347
+#> $meta
+#>   numFound start maxScore
+#> 1      300     0       NA
+#> 
+#> $data
+#>                             id
+#> 1 10.1371/journal.pone.0111982
+#> 2 10.1371/journal.pone.0057533
+#> 3 10.1371/journal.pone.0045899
+#> 4 10.1371/journal.pone.0037191
+#> 5 10.1371/journal.pone.0051360
 ```
 
 Get only full article DOIs
@@ -54,12 +61,17 @@ searchplos(q="*:*", fl='id', fq='doc_type:full', start=0, limit=5)
 ```
 
 ```
-##                             id
-## 1 10.1371/journal.pntd.0001738
-## 2 10.1371/journal.pone.0035044
-## 3 10.1371/journal.pone.0067070
-## 4 10.1371/journal.pone.0095362
-## 5 10.1371/journal.pone.0031015
+#> $meta
+#>   numFound start maxScore
+#> 1   142153     0       NA
+#> 
+#> $data
+#>                             id
+#> 1 10.1371/journal.pbio.1000156
+#> 2 10.1371/journal.pbio.1000106
+#> 3 10.1371/journal.pmed.1001197
+#> 4 10.1371/journal.pbio.0040294
+#> 5 10.1371/journal.pone.0093878
 ```
 
 Get DOIs for only PLoS One articles
@@ -70,12 +82,17 @@ searchplos(q="*:*", fl='id', fq='cross_published_journal_key:PLoSONE', start=0, 
 ```
 
 ```
-##                                        id
-## 1      10.1371/journal.pone.0067079/title
-## 2   10.1371/journal.pone.0067079/abstract
-## 3 10.1371/journal.pone.0067079/references
-## 4       10.1371/journal.pone.0067079/body
-## 5       10.1371/journal.pone.0095366/body
+#> $meta
+#>   numFound start maxScore
+#> 1  1014109     0       NA
+#> 
+#> $data
+#>                                        id
+#> 1       10.1371/journal.pone.0094673/body
+#> 2            10.1371/journal.pone.0093878
+#> 3      10.1371/journal.pone.0093878/title
+#> 4   10.1371/journal.pone.0093878/abstract
+#> 5 10.1371/journal.pone.0093878/references
 ```
 
 Get DOIs for full article in PLoS One
@@ -88,15 +105,20 @@ searchplos(q="*:*", fl='id',
 ```
 
 ```
-##                             id
-## 1 10.1371/journal.pone.0035044
-## 2 10.1371/journal.pone.0067070
-## 3 10.1371/journal.pone.0095362
-## 4 10.1371/journal.pone.0031015
-## 5 10.1371/journal.pone.0059231
+#> $meta
+#>   numFound start maxScore
+#> 1   119014     0       NA
+#> 
+#> $data
+#>                             id
+#> 1 10.1371/journal.pone.0093878
+#> 2 10.1371/journal.pone.0094012
+#> 3 10.1371/journal.pone.0094113
+#> 4 10.1371/journal.pone.0094154
+#> 5 10.1371/journal.pone.0094152
 ```
 
-Serch for many terms
+Search for many terms
 
 
 ```r
@@ -105,20 +127,37 @@ lapply(q, function(x) searchplos(x, limit=2))
 ```
 
 ```
-## [[1]]
-##                             id
-## 1 10.1371/journal.pone.0059813
-## 2 10.1371/journal.pone.0001248
-## 
-## [[2]]
-##                                                        id
-## 1 10.1371/annotation/c55d5089-ba2f-449d-8696-2bc8395978db
-## 2 10.1371/annotation/9773af53-a076-4946-a3f1-83914226c10d
-## 
-## [[3]]
-##                             id
-## 1 10.1371/journal.pbio.0020122
-## 2 10.1371/journal.pbio.1001166
+#> [[1]]
+#> [[1]]$meta
+#>   numFound start maxScore
+#> 1    24939     0       NA
+#> 
+#> [[1]]$data
+#>                             id
+#> 1 10.1371/journal.pone.0059813
+#> 2 10.1371/journal.pone.0001248
+#> 
+#> 
+#> [[2]]
+#> [[2]]$meta
+#>   numFound start maxScore
+#> 1    42123     0       NA
+#> 
+#> [[2]]$data
+#>                                                        id
+#> 1 10.1371/annotation/9773af53-a076-4946-a3f1-83914226c10d
+#> 2 10.1371/annotation/c55d5089-ba2f-449d-8696-2bc8395978db
+#> 
+#> 
+#> [[3]]
+#> [[3]]$meta
+#>   numFound start maxScore
+#> 1   121719     0       NA
+#> 
+#> [[3]]$data
+#>                             id
+#> 1 10.1371/journal.pbio.0020122
+#> 2 10.1371/journal.pbio.1001166
 ```
 
 ### Search on specific sections
@@ -139,12 +178,17 @@ plosauthor(q = "Eisen", fl = "author", limit = 5)
 ```
 
 ```
-##             author
-## 1 Jonathan A Eisen
-## 2 Jonathan A Eisen
-## 3 Jonathan A Eisen
-## 4 Jonathan A Eisen
-## 5 Jonathan A Eisen
+#> $meta
+#>   numFound start maxScore
+#> 1      741     0       NA
+#> 
+#> $data
+#>             author
+#> 1 Jonathan A Eisen
+#> 2 Jonathan A Eisen
+#> 3 Jonathan A Eisen
+#> 4 Jonathan A Eisen
+#> 5 Jonathan A Eisen
 ```
 
 `plosabstract` searches across abstracts, and in this case returns the id and title of the matching papers
@@ -155,18 +199,23 @@ plosabstract(q = 'drosophila', fl='id,title', limit = 5)
 ```
 
 ```
-##                             id
-## 1 10.1371/journal.pbio.0040198
-## 2 10.1371/journal.pbio.0030246
-## 3 10.1371/journal.pone.0012421
-## 4 10.1371/journal.pbio.0030389
-## 5 10.1371/journal.pone.0002817
-##                                                                             title
-## 1                                                                     All for All
-## 2                                     School Students as Drosophila Experimenters
-## 3                            Host Range and Specificity of the Drosophila C Virus
-## 4                     New Environments Set the Stage for Changing Tastes in Mates
-## 5 High-Resolution, In Vivo Magnetic Resonance Imaging of Drosophila at 18.8 Tesla
+#> $meta
+#>   numFound start maxScore
+#> 1     2498     0       NA
+#> 
+#> $data
+#>                             id
+#> 1 10.1371/journal.pbio.0040198
+#> 2 10.1371/journal.pbio.0030246
+#> 3 10.1371/journal.pone.0012421
+#> 4 10.1371/journal.pbio.0030389
+#> 5 10.1371/journal.pbio.1000342
+#>                                                                       title
+#> 1                                                               All for All
+#> 2                               School Students as Drosophila Experimenters
+#> 3                      Host Range and Specificity of the Drosophila C Virus
+#> 4               New Environments Set the Stage for Changing Tastes in Mates
+#> 5 Variable Transcription Factor Binding: A Mechanism of Evolutionary Change
 ```
 
 `plostitle` searches across titles, and in this case returns the title and journal of the matching papers
@@ -177,168 +226,23 @@ plostitle(q='drosophila', fl='title,journal', limit=5)
 ```
 
 ```
-##         journal                                                 title
-## 1  PLoS Biology           Combinatorial Coding for Drosophila Neurons
-## 2  PLoS Biology           School Students as Drosophila Experimenters
-## 3      PLoS ONE              A Tripartite Synapse Model in Drosophila
-## 4      PLoS ONE                             A DNA Virus of Drosophila
-## 5 PLoS Genetics Phenotypic Plasticity of the Drosophila Transcriptome
-```
-
-### Faceted search
-
-Facet by journal
-
-
-```r
-facetplos(q='*:*', facet.field='journal')
-```
-
-```
-## $facet_queries
-## NULL
-## 
-## $facet_fields
-## $facet_fields$journal
-##                                  X1     X2
-## 1                          plos one 792679
-## 2                     plos genetics  36699
-## 3                    plos pathogens  32259
-## 4        plos computational biology  26944
-## 5                      plos biology  25123
-## 6  plos neglected tropical diseases  21071
-## 7                     plos medicine  17693
-## 8              plos clinical trials    521
-## 9                  plos collections     20
-## 10                     plos medicin      9
-## 
-## 
-## $facet_dates
-## NULL
-## 
-## $facet_ranges
-## NULL
-```
-
-Using `facet.query` to get counts
-
-
-```r
-facetplos(q='*:*', facet.field='journal', facet.query='cell,bird')
-```
-
-```
-## $facet_queries
-##        term value
-## 1 cell,bird    14
-## 
-## $facet_fields
-## $facet_fields$journal
-##                                  X1     X2
-## 1                          plos one 792679
-## 2                     plos genetics  36699
-## 3                    plos pathogens  32259
-## 4        plos computational biology  26944
-## 5                      plos biology  25123
-## 6  plos neglected tropical diseases  21071
-## 7                     plos medicine  17693
-## 8              plos clinical trials    521
-## 9                  plos collections     20
-## 10                     plos medicin      9
-## 
-## 
-## $facet_dates
-## NULL
-## 
-## $facet_ranges
-## NULL
-```
-
-Date faceting
-
-
-```r
-facetplos(q='*:*', url=url, facet.date='publication_date',
-  facet.date.start='NOW/DAY-5DAYS', facet.date.end='NOW', facet.date.gap='+1DAY')
-```
-
-```
-## $facet_queries
-## NULL
-## 
-## $facet_fields
-## NULL
-## 
-## $facet_dates
-## $facet_dates$publication_date
-##                   date value
-## 1 2014-05-08T00:00:00Z  2872
-## 2 2014-05-09T00:00:00Z  1208
-## 3 2014-05-10T00:00:00Z     0
-## 4 2014-05-11T00:00:00Z  1111
-## 5 2014-05-12T00:00:00Z  2379
-## 6 2014-05-13T00:00:00Z  1268
-## 
-## 
-## $facet_ranges
-## NULL
-```
-
-### Highlighted search
-
-Search for the term _alcohol_ in the abstracts of articles, return only 10 results
-
-
-```r
-highplos(q='alcohol', hl.fl = 'abstract', rows=2)
-```
-
-```
-## $`10.1371/journal.pmed.0040151`
-## $`10.1371/journal.pmed.0040151`$abstract
-## [1] "Background: <em>Alcohol</em> consumption causes an estimated 4% of the global disease burden, prompting"
-## 
-## 
-## $`10.1371/journal.pone.0027752`
-## $`10.1371/journal.pone.0027752`$abstract
-## [1] "Background: The negative influences of <em>alcohol</em> on TB management with regard to delays in seeking"
-```
-
-Search for the term _alcohol_ in the abstracts of articles, and return fragment size of 20 characters, return only 5 results
-
-
-```r
-highplos(q='alcohol', hl.fl='abstract', hl.fragsize=20, rows=2)
-```
-
-```
-## $`10.1371/journal.pmed.0040151`
-## $`10.1371/journal.pmed.0040151`$abstract
-## [1] "Background: <em>Alcohol</em>"
-## 
-## 
-## $`10.1371/journal.pone.0027752`
-## $`10.1371/journal.pone.0027752`$abstract
-## [1] " of <em>alcohol</em> on TB management"
-```
-
-Search for the term _experiment_ across all sections of an article, return id (DOI) and title fl only, search in full articles only (via `fq='doc_type:full'`), and return only 10 results
-
-
-```r
-highplos(q='everything:"experiment"', fl='id,title', fq='doc_type:full',
-   rows=2)
-```
-
-```
-## $`10.1371/journal.pone.0039681`
-## $`10.1371/journal.pone.0039681`$everything
-## [1] " Selection of Transcriptomics <em>Experiments</em> Improves Guilt-by-Association Analyses Transcriptomics <em>Experiment</em>"
-## 
-## 
-## $`10.1371/annotation/9b8741e2-0f5f-49f9-9eaa-1b0cb9b8d25f`
-## $`10.1371/annotation/9b8741e2-0f5f-49f9-9eaa-1b0cb9b8d25f`$everything
-## [1] " in the labels under the bars. The labels should read <em>Experiment</em> 3 / <em>Experiment</em> 4 instead of <em>Experiment</em>"
+#> $meta
+#>   numFound start maxScore
+#> 1     1603     0       NA
+#> 
+#> $data
+#>                      journal
+#> 1               PLoS Biology
+#> 2              PLoS Genetics
+#> 3               PLoS Biology
+#> 4                   PLoS ONE
+#> 5 PLoS Computational Biology
+#>                                                   title
+#> 1           School Students as Drosophila Experimenters
+#> 2 Phenotypic Plasticity of the Drosophila Transcriptome
+#> 3         Identification of Drosophila MicroRNA Targets
+#> 4           Quantification of Food Intake in Drosophila
+#> 5            Parametric Alignment of Drosophila Genomes
 ```
 
 ### Search for terms and visualize results as a histogram OR as a plot through time
@@ -354,12 +258,12 @@ out$table
 ```
 
 ```
-##   No_Articles       Term
-## 1        7340     monkey
-## 2         245 Helianthus
-## 3         673  sunflower
-## 4       79470    protein
-## 5         876      whale
+#>   No_Articles       Term
+#> 1        8335     monkey
+#> 2         300 Helianthus
+#> 3         818  sunflower
+#> 4       91981    protein
+#> 5        1023      whale
 ```
 
 
@@ -367,7 +271,7 @@ out$table
 out$plot
 ```
 
-![plot of chunk plosword1plot](figure/plosword1plot.png) 
+![plot of chunk plosword1plot](figure/plosword1plot-1.png) 
 
 You can also pass in curl options, in this case get verbose information on the curl call.
 
@@ -377,28 +281,21 @@ plosword('Helianthus', callopts=list(verbose=TRUE))
 ```
 
 ```
-## Number of articles with search term 
-##                                 245
+#> Number of articles with search term 
+#>                                 300
 ```
 
 ### Visualize terms
 
-`plot_througtime` allows you to search for up to 2 words and visualize the results as a line plot through time, comparing number of articles matching through time. Visualize with the ggplot2 package, only up to two terms for now.
+`plot_throughtime` allows you to search for up to 2 words and visualize the results as a line plot through time, comparing number of articles matching through time. Visualize with the ggplot2 package, only up to two terms for now.
 
 
 ```r
-plot_throughtime(terms = "phylogeny", limit = 200)
+plot_throughtime(terms = "phylogeny", limit = 200) + geom_line(size=2, color='black')
 ```
 
-![plot of chunk throughtime1](figure/throughtime1.png) 
+![plot of chunk throughtime1](figure/throughtime1-1.png) 
 
-OR using google visualizations through the googleVis package, check it your self using, e.g. (not shown here)
+### More
 
-
-```r
-plot_throughtime(terms = list("drosophila", "flower"), limit = 200, gvis = TRUE)
-```
-
-...And a google visualization will render on your local browser and you
-can play with three types of plots (point, histogram, line), all through
-time. The plot is not shown here, but try it out for yourself!!
+See the _Faceted and highlighted searches_ and _Full text_ vignettes for more `rplos` help.
