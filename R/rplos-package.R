@@ -30,9 +30,16 @@
 #' head(out$data)
 #' }
 #' 
+#' @importFrom stats setNames na.omit
+#' @importFrom utils browseURL
+#' @importFrom methods is
 #' @docType package
 #' @name rplos
 #' @aliases rplos rplos-package
+#' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
+#' @author Carl Boettiger \email{cboettig@@gmail.com}
+#' @author Karthik Ram \email{karthik.ram@@gmail.com}
+#' @keywords package
 NULL
 
 #' Defunct functions in rplos

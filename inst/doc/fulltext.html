@@ -5,6 +5,18 @@
 
 <title>Full text</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -45,9 +57,6 @@ var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/<
 hljs.initHighlightingOnLoad();
 </script>
 
-<!-- MathJax scripts -->
-<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
 
 
 <style type="text/css">
@@ -60,6 +69,7 @@ body, td {
 body {
   max-width: 800px;
   margin: auto;
+  padding: 1em;
   line-height: 20px;
 }
 
@@ -67,28 +77,28 @@ tt, code, pre {
    font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
 
-h1 { 
-   font-size:2.2em; 
+h1 {
+   font-size:2.2em;
 }
 
-h2 { 
-   font-size:1.8em; 
+h2 {
+   font-size:1.8em;
 }
 
-h3 { 
-   font-size:1.4em; 
+h3 {
+   font-size:1.4em;
 }
 
-h4 { 
-   font-size:1.0em; 
+h4 {
+   font-size:1.0em;
 }
 
-h5 { 
-   font-size:0.9em; 
+h5 {
+   font-size:0.9em;
 }
 
-h6 { 
-   font-size:0.8em; 
+h6 {
+   font-size:0.8em;
 }
 
 a:visited {
@@ -98,7 +108,9 @@ a:visited {
 pre, img {
   max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
@@ -132,54 +144,54 @@ hr {
 }
 
 @media print {
-   * { 
-      background: transparent !important; 
-      color: black !important; 
-      filter:none !important; 
-      -ms-filter: none !important; 
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
    }
 
-   body { 
-      font-size:12pt; 
-      max-width:100%; 
-   }
-       
-   a, a:visited { 
-      text-decoration: underline; 
+   body {
+      font-size:12pt;
+      max-width:100%;
    }
 
-   hr { 
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
       visibility: hidden;
       page-break-before: always;
    }
 
-   pre, blockquote { 
-      padding-right: 1em; 
-      page-break-inside: avoid; 
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
    }
 
-   tr, img { 
-      page-break-inside: avoid; 
+   tr, img {
+      page-break-inside: avoid;
    }
 
-   img { 
-      max-width: 100% !important; 
+   img {
+      max-width: 100% !important;
    }
 
-   @page :left { 
-      margin: 15mm 20mm 15mm 10mm; 
-   }
-     
-   @page :right { 
-      margin: 15mm 10mm 15mm 20mm; 
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
    }
 
-   p, h2, h3 { 
-      orphans: 3; widows: 3; 
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
    }
 
-   h2, h3 { 
-      page-break-after: avoid; 
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
    }
 }
 </style>
@@ -192,6 +204,7 @@ hr {
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Full text}
+%\VignetteEncoding{UTF-8}
 -->
 
 <h1>Full text</h1>
@@ -241,26 +254,26 @@ hr {
 full_text_urls(dois)
 </code></pre>
 
-<pre><code>#&gt;  [1] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.1000156&amp;representation=XML&quot; 
-#&gt;  [2] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.1000106&amp;representation=XML&quot; 
-#&gt;  [3] &quot;http://www.plosmedicine.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pmed.1001197&amp;representation=XML&quot;
-#&gt;  [4] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040294&amp;representation=XML&quot; 
-#&gt;  [5] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0093878&amp;representation=XML&quot;     
-#&gt;  [6] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040247&amp;representation=XML&quot; 
-#&gt;  [7] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040243&amp;representation=XML&quot; 
-#&gt;  [8] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0094012&amp;representation=XML&quot;     
-#&gt;  [9] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040442&amp;representation=XML&quot; 
-#&gt; [10] &quot;http://www.plosmedicine.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pmed.1001302&amp;representation=XML&quot;
-#&gt; [11] &quot;http://www.plosmedicine.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pmed.1001318&amp;representation=XML&quot;
-#&gt; [12] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040419&amp;representation=XML&quot; 
-#&gt; [13] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040447&amp;representation=XML&quot; 
-#&gt; [14] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0094113&amp;representation=XML&quot;     
-#&gt; [15] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0050125&amp;representation=XML&quot; 
-#&gt; [16] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0050136&amp;representation=XML&quot; 
-#&gt; [17] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0050091&amp;representation=XML&quot; 
-#&gt; [18] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040116&amp;representation=XML&quot; 
-#&gt; [19] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040198&amp;representation=XML&quot; 
-#&gt; [20] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.0040358&amp;representation=XML&quot;
+<pre><code>#&gt;  [1] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031384&amp;representation=XML&quot;
+#&gt;  [2] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031385&amp;representation=XML&quot;
+#&gt;  [3] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0107441&amp;representation=XML&quot;
+#&gt;  [4] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0000339&amp;representation=XML&quot;
+#&gt;  [5] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0046739&amp;representation=XML&quot;
+#&gt;  [6] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0061900&amp;representation=XML&quot;
+#&gt;  [7] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0061895&amp;representation=XML&quot;
+#&gt;  [8] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0077194&amp;representation=XML&quot;
+#&gt;  [9] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0015930&amp;representation=XML&quot;
+#&gt; [10] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0123741&amp;representation=XML&quot;
+#&gt; [11] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031375&amp;representation=XML&quot;
+#&gt; [12] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0061894&amp;representation=XML&quot;
+#&gt; [13] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0123740&amp;representation=XML&quot;
+#&gt; [14] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0107433&amp;representation=XML&quot;
+#&gt; [15] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0000334&amp;representation=XML&quot;
+#&gt; [16] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031374&amp;representation=XML&quot;
+#&gt; [17] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0092196&amp;representation=XML&quot;
+#&gt; [18] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0046713&amp;representation=XML&quot;
+#&gt; [19] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0046715&amp;representation=XML&quot;
+#&gt; [20] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0000335&amp;representation=XML&quot;
 </code></pre>
 
 <h3>Get XML</h3>
@@ -302,7 +315,7 @@ xml &lt;- out[dois[1]][[1]]
 xpathSApply(xmlParse(xml), &quot;//abstract/p&quot;, xmlValue)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;Solving global health challenges in a sustainable manner depends on explicitly addressing scientific capacity-building needs, as well as establishing long-term, meaningful partnerships with colleagues in the developing world.&quot;
+<pre><code>#&gt; [1] &quot;Pancreatic adenocarcinoma, a desmoplastic disease, is the fourth leading cause of cancer-related death in the Western world due, in large part, to locally invasive primary tumor growth and ensuing metastasis. SPARC is a matricellular protein that governs extracellular matrix (ECM) deposition and maturation during tissue remodeling, particularly, during wound healing and tumorigenesis. In the present study, we sought to determine the mechanism by which lack of host SPARC alters the tumor microenvironment and enhances invasion and metastasis of an orthotopic model of pancreatic cancer. We identified that levels of active TGFÎ²1 were increased significantly in tumors grown in SPARC-null mice. TGFÎ²1 contributes to many aspects of tumor development including metastasis, endothelial cell permeability, inflammation and fibrosis, all of which are altered in the absence of stromal-derived SPARC. Given these results, we performed a survival study to assess the contribution of increased TGFÎ²1 activity to tumor progression in SPARC-null mice using losartan, an angiotensin II type 1 receptor antagonist that diminishes TGFÎ²1 expression and activation in vivo. Tumors grown in SPARC-null mice progressed more quickly than those grown in wild-type littermates leading to a significant reduction in median survival. However, median survival of SPARC-null animals treated with losartan was extended to that of losartan-treated wild-type controls. In addition, losartan abrogated TGFÎ² induced gene expression, reduced local invasion and metastasis, decreased vascular permeability and altered the immune profile of tumors grown in SPARC-null mice. These data support the concept that aberrant TGFÎ²1-activation in the absence of host SPARC contributes significantly to tumor progression and suggests that SPARC, by controlling ECM deposition and maturation, can regulate TGFÎ² availability and activation.&quot;
 </code></pre>
 
 <p>Extract reference lists, just give back first one from each for brevity sake</p>
@@ -312,76 +325,45 @@ xpathSApply(xmlParse(xml), &quot;//abstract/p&quot;, xmlValue)
 })
 </code></pre>
 
-<pre><code>#&gt; $`10.1371/journal.pbio.1000106`
-#&gt; &lt;ref id=&quot;pbio-1000106-b001&quot;&gt;
-#&gt;   &lt;label&gt;1&lt;/label&gt;
-#&gt;   &lt;element-citation publication-type=&quot;journal&quot; xlink:type=&quot;simple&quot;&gt;
-#&gt;     &lt;person-group&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Stahl&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;FW&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Foss&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;HM&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Young&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;LS&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Borts&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;RH&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Abdullah&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;MF&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;etal/&gt;
-#&gt;     &lt;/person-group&gt;
-#&gt;     &lt;year&gt;2004&lt;/year&gt;
-#&gt;     &lt;article-title&gt;Does crossover interference count in &lt;named-content content-type=&quot;genus-species&quot; xlink:type=&quot;simple&quot;&gt;Saccharomyces cerevisiae&lt;/named-content&gt;.&lt;/article-title&gt;
-#&gt;     &lt;source&gt;Genetics&lt;/source&gt;
-#&gt;     &lt;volume&gt;168&lt;/volume&gt;
-#&gt;     &lt;fpage&gt;35&lt;/fpage&gt;
-#&gt;     &lt;lpage&gt;48&lt;/lpage&gt;
-#&gt;   &lt;/element-citation&gt;
-#&gt; &lt;/ref&gt; 
-#&gt; 
-#&gt; $`10.1371/journal.pmed.1001197`
-#&gt; &lt;ref id=&quot;pmed.1001197-Crowther1&quot;&gt;
+<pre><code>#&gt; $`10.1371/journal.pone.0031385`
+#&gt; &lt;ref id=&quot;pone.0031385-Machesky1&quot;&gt;
 #&gt;   &lt;label&gt;1&lt;/label&gt;
 #&gt;   &lt;element-citation publication-type=&quot;journal&quot; xlink:type=&quot;simple&quot;&gt;
 #&gt;     &lt;person-group person-group-type=&quot;author&quot;&gt;
 #&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Crowther&lt;/surname&gt;
+#&gt;         &lt;surname&gt;Machesky&lt;/surname&gt;
+#&gt;         &lt;given-names&gt;LM&lt;/given-names&gt;
+#&gt;       &lt;/name&gt;
+#&gt;       &lt;name name-style=&quot;western&quot;&gt;
+#&gt;         &lt;surname&gt;Atkinson&lt;/surname&gt;
+#&gt;         &lt;given-names&gt;SJ&lt;/given-names&gt;
+#&gt;       &lt;/name&gt;
+#&gt;       &lt;name name-style=&quot;western&quot;&gt;
+#&gt;         &lt;surname&gt;Ampe&lt;/surname&gt;
 #&gt;         &lt;given-names&gt;C&lt;/given-names&gt;
 #&gt;       &lt;/name&gt;
 #&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Dodd&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;JM&lt;/given-names&gt;
+#&gt;         &lt;surname&gt;Vandekerckhove&lt;/surname&gt;
+#&gt;         &lt;given-names&gt;J&lt;/given-names&gt;
 #&gt;       &lt;/name&gt;
 #&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Hiller&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;JE&lt;/given-names&gt;
+#&gt;         &lt;surname&gt;Pollard&lt;/surname&gt;
+#&gt;         &lt;given-names&gt;TD&lt;/given-names&gt;
 #&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Haslam&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;RR&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Robinson&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;JS&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;etal/&gt;
 #&gt;     &lt;/person-group&gt;
-#&gt;     &lt;year&gt;2012&lt;/year&gt;
-#&gt;     &lt;article-title&gt;Planned vaginal birth or elective repeat caesarean: Patient preference restricted cohort with nested randomised trial.&lt;/article-title&gt;
-#&gt;     &lt;source&gt;PLoS Med&lt;/source&gt;
-#&gt;     &lt;volume&gt;9&lt;/volume&gt;
-#&gt;     &lt;fpage&gt;e1001192&lt;/fpage&gt;
-#&gt;     &lt;comment&gt;doi:&lt;ext-link ext-link-type=&quot;uri&quot; xlink:href=&quot;http://dx.doi.org/10.1371/journal.pmed.1001192&quot; xlink:type=&quot;simple&quot;&gt;10.1371/journal.pmed.1001192&lt;/ext-link&gt;&lt;/comment&gt;
+#&gt;     &lt;year&gt;1994&lt;/year&gt;
+#&gt;     &lt;article-title&gt;Purification of a cortical complex containing two unconventional actins from Acanthamoeba by affinity chromatography on profilin- agarose.&lt;/article-title&gt;
+#&gt;     &lt;source&gt;J Cell Biol&lt;/source&gt;
+#&gt;     &lt;volume&gt;127&lt;/volume&gt;
+#&gt;     &lt;fpage&gt;107&lt;/fpage&gt;
+#&gt;     &lt;lpage&gt;115&lt;/lpage&gt;
 #&gt;   &lt;/element-citation&gt;
+#&gt; &lt;/ref&gt; 
+#&gt; 
+#&gt; $`10.1371/journal.pone.0107441`
+#&gt; &lt;ref id=&quot;pone.0107441-Daszak1&quot;&gt;
+#&gt;   &lt;label&gt;1&lt;/label&gt;
+#&gt;   &lt;mixed-citation publication-type=&quot;journal&quot; xlink:type=&quot;simple&quot;&gt;&lt;name name-style=&quot;western&quot;&gt;&lt;surname&gt;Daszak&lt;/surname&gt;&lt;given-names&gt;P&lt;/given-names&gt;&lt;/name&gt;, &lt;name name-style=&quot;western&quot;&gt;&lt;surname&gt;Cunningham&lt;/surname&gt;&lt;given-names&gt;AA&lt;/given-names&gt;&lt;/name&gt;, &lt;name name-style=&quot;western&quot;&gt;&lt;surname&gt;Hyatt&lt;/surname&gt;&lt;given-names&gt;AD&lt;/given-names&gt;&lt;/name&gt; (&lt;year&gt;2000&lt;/year&gt;) &lt;article-title&gt;Emerging Infectious Diseases of Wildlifeâ Threats to Biodiversity and Human Health&lt;/article-title&gt;. &lt;source&gt;Science (80â)&lt;/source&gt; &lt;volume&gt;287&lt;/volume&gt;: &lt;fpage&gt;443&lt;/fpage&gt;â&lt;lpage&gt;449&lt;/lpage&gt; Available: &lt;ext-link ext-link-type=&quot;uri&quot; xlink:href=&quot;http://www.sciencemag.org/cgi/doi/10.1126/science.287.5452.443&quot; xlink:type=&quot;simple&quot;&gt;http://www.sciencemag.org/cgi/doi/10.1126/science.287.5452.443&lt;/ext-link&gt; Accessed 2 March 2013.&lt;/mixed-citation&gt;
 #&gt; &lt;/ref&gt;
 </code></pre>
 
@@ -395,17 +377,43 @@ tmcorpus &lt;- Corpus(VectorSource(out_parsed))
 (dtm &lt;- DocumentTermMatrix(tmcorpus))
 </code></pre>
 
-<pre><code>#&gt; &lt;&lt;DocumentTermMatrix (documents: 3, terms: 1752)&gt;&gt;
-#&gt; Non-/sparse entries: 2005/3251
-#&gt; Sparsity           : 62%
-#&gt; Maximal term length: 84
+<pre><code>#&gt; &lt;&lt;DocumentTermMatrix (documents: 3, terms: 5334)&gt;&gt;
+#&gt; Non-/sparse entries: 6513/9489
+#&gt; Sparsity           : 59%
+#&gt; Maximal term length: 109
 #&gt; Weighting          : term frequency (tf)
 </code></pre>
 
 <pre><code class="r">findFreqTerms(dtm, lowfreq = 50)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;and&quot;  &quot;for&quot;  &quot;that&quot; &quot;the&quot;
+<pre><code>#&gt;  [1] &quot;(figure&quot;                          &quot;actin&quot;                           
+#&gt;  [3] &quot;all&quot;                              &quot;amphibian&quot;                       
+#&gt;  [5] &quot;and&quot;                              &quot;are&quot;                             
+#&gt;  [7] &quot;âµm&quot;                              &quot;barbed&quot;                          
+#&gt;  [9] &quot;between&quot;                          &quot;bundles&quot;                         
+#&gt; [11] &quot;catesbeianus&quot;                     &quot;cell&quot;                            
+#&gt; [13] &quot;cells&quot;                            &quot;comet&quot;                           
+#&gt; [15] &quot;density&quot;                          &quot;each&quot;                            
+#&gt; [17] &quot;filament&quot;                         &quot;filaments&quot;                       
+#&gt; [19] &quot;for&quot;                              &quot;from&quot;                            
+#&gt; [21] &quot;grown&quot;                            &quot;growth&quot;                          
+#&gt; [23] &quot;have&quot;                             &quot;host&quot;                            
+#&gt; [25] &quot;individual&quot;                       &quot;individuals&quot;                     
+#&gt; [27] &quot;infection&quot;                        &quot;losartan&quot;                        
+#&gt; [29] &quot;low&quot;                              &quot;mg2+&quot;                            
+#&gt; [31] &quot;mice&quot;                             &quot;motility&quot;                        
+#&gt; [33] &quot;not&quot;                              &quot;number&quot;                          
+#&gt; [35] &quot;other&quot;                            &quot;our&quot;                             
+#&gt; [37] &quot;pan02&quot;                            &quot;sparc&quot;                           
+#&gt; [39] &quot;sparc+/+&quot;                         &quot;sparcâ\u0088\u0092/â\u0088\u0092&quot;
+#&gt; [41] &quot;species&quot;                          &quot;tail&quot;                            
+#&gt; [43] &quot;tgfî²1&quot;                           &quot;that&quot;                            
+#&gt; [45] &quot;the&quot;                              &quot;this&quot;                            
+#&gt; [47] &quot;total&quot;                            &quot;treatment&quot;                       
+#&gt; [49] &quot;tumor&quot;                            &quot;tumors&quot;                          
+#&gt; [51] &quot;was&quot;                              &quot;were&quot;                            
+#&gt; [53] &quot;wetland&quot;                          &quot;with&quot;
 </code></pre>
 
 </body>
