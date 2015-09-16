@@ -1,7 +1,7 @@
-df5640df5a5e06f4b0a3b8eff53b0bc7 *DESCRIPTION
+54870aeb974c1944704856997aaff001 *DESCRIPTION
 232d5debe29b80d939ef88b184396afe *LICENSE
 49429e168236a74a7a257c949d29cd83 *NAMESPACE
-e4fae8014fe3c33f770ccecf2d49cff4 *NEWS.md
+1a596bde203d437fcdc2dd8d07d2d0b4 *NEWS.md
 a8afd67462f227bd85051926868eaf82 *R/citations.R
 5ec476b08914a092baf9552fe342081e *R/crossref.R
 e3fc46c265bdcc90a9b90bb172868955 *R/facetplos.r
@@ -23,7 +23,7 @@ b11e21a2522d23586dc05b6a5fdb9c4a *R/plosviews.R
 6d8cf9ea9e35b35decae1443a5f387cd *R/searchplos.R
 7a2ea4589e2ad34d7a5199d9ab6bbad2 *R/zzz.R
 7203a428bf1753eb722f16469d7d7ec1 *README.md
-9c363d68aeb21067db2f49be19e2f873 *build/vignette.rds
+d62b7d54ac894ae643281519c7e1d23b *build/vignette.rds
 3ed78c9d3941be8fdcc22521d007c77f *data/isocodes.rda
 ed34db119b03072ec351564dbbc8db41 *data/plosfields.rda
 dec1a0bb4d0bb517f33bbb7f06a0bca8 *inst/doc/facethighlight.Rmd
@@ -77,7 +77,7 @@ aaf262524587f7e338772010b295e4d5 *tests/testthat/test-citations.R
 029b36717e2a4313445ce2fecae3de08 *tests/testthat/test-crossref.R
 ae9c5c9a6fbf3504772bfd9d472aff58 *tests/testthat/test-facetplos.R
 d48bc2dfbb805dd4703614e5e3b941de *tests/testthat/test-formatarticleurl.R
-e0a1f0d868651c56e49039e337389c5a *tests/testthat/test-fulltext.R
+af899a4dca4cc1c32b6a30e397ebc457 *tests/testthat/test-fulltext.R
 9ba43d18fdbe53d42ccbbe9b60b07ea6 *tests/testthat/test-highbrow.R
 239953b86d5f79b9c3a8453ba0b72d78 *tests/testthat/test-highplos.R
 cb3d2f68cbe3a5671dbb2cacfa2a45cc *tests/testthat/test-journalnamekey.R
