@@ -1,10 +1,6 @@
 #' Plot results through time for serach results from PLoS Journals.
 #'
 #' @export
-#' @import ggplot2
-#' @importFrom dplyr left_join
-#' @importFrom plyr ddply llply summarise
-#' @importFrom reshape2 melt
 #' @param terms search terms (character)
 #' @param limit number of results to return (integer)
 #' @param ... optional additional curl options (debugging tools mostly)
@@ -16,32 +12,31 @@
 #' plot_throughtime(list('drosophila','flower','dolphin','cell','cloud'), 100)
 #' }
 
-plot_throughtime <- function(terms, limit = NA, ...)
-{
+plot_throughtime <- function(terms, limit = NA, ...) {
   ## avoid false positive 'unreferenced variable' warnings
-  year=month=dateplot=V1=value=variable=NULL
-  temp <- lapply(terms, timesearch, limit=limit, ...)
-  ij <- function(...) left_join(..., by=c("year", "month"))
+  year = month = dateplot = V1 = value = variable = NULL
+  temp <- lapply(terms, timesearch, limit = limit, ...)
+  ij <- function(...) left_join(..., by = c("year", "month"))
   df <- setNames(Reduce(ij, temp), c("year", "month", terms))
   df$dateplot <- as.Date(paste(df$month, "1",
-                               substring(df$year, 3, 4), sep="/"), "%m/%d/%y")
+                               substring(df$year, 3, 4), sep = "/"), "%m/%d/%y")
   dfm <- melt(df[, -c(1:2)], id.vars = "dateplot")
   dfm$value <- as.numeric(dfm$value)
   pp <- ggplot(dfm, aes(x = dateplot, y = value, group = variable, colour = variable)) +
     geom_line(size = 2) +
-    scale_colour_brewer(palette = "Blues") +
+    scale_colour_brewer(palette = "Dark2") +
     labs(x = "", y = "Number of articles matching search term(s)\n",
-         title = paste("PLoS search of", paste(as.character(terms), collapse=","), "using the rplos package")) +
+         title = paste("PLoS search of", paste(as.character(terms), collapse = ","), "using the rplos package")) +
     theme(legend.position = c(0.35, 0.8))
   return(pp)
 }
 
 timesearch <- function(terms, limit, ...){
-  month=NULL
+  month <- NULL
   args <- ploscompact(list(q = terms, fl = "publication_date", wt = "json", rows = limit))
   tt <- GET(pbase(), query = args, ...)
   stop_for_status(tt)
-  res <- content(tt, as = "text")
+  res <- utf8cont(tt)
   json <- jsonlite::fromJSON(res, FALSE)
   tempresults <- json$response$docs
   ttt <- data.frame( do.call(rbind, tempresults), stringsAsFactors = FALSE )
