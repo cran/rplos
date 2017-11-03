@@ -209,7 +209,12 @@ hr {
 
 <h1>Faceted and highlighted searches</h1>
 
-<p>In addition to <code>searchplos()</code> and related searching functions, there are a few slightly different ways to search: faceting and highlighted searches. Faceting allows you to ask, e.g., how many articles are published in each of the PLOS journals. Highlighting allows you to ask, e.g., highlight terms that I search for in the text results given back, which can make downstream processing easier, and help visualize search results (see <code>highbrow()</code> below). </p>
+<p>In addition to <code>searchplos()</code> and related searching functions, there are a 
+few slightly different ways to search: faceting and highlighted searches. 
+Faceting allows you to ask, e.g., how many articles are published in each of 
+the PLOS journals. Highlighting allows you to ask, e.g., highlight terms that 
+I search for in the text results given back, which can make downstream 
+processing easier, and help visualize search results (see <code>highbrow()</code> below). </p>
 
 <h3>Load package from CRAN</h3>
 
@@ -231,17 +236,16 @@ hr {
 #&gt; 
 #&gt; $facet_fields
 #&gt; $facet_fields$journal
-#&gt;                                  X1      X2
-#&gt; 1                          plos one 1083485
-#&gt; 2                     plos genetics   45073
-#&gt; 3                    plos pathogens   39357
-#&gt; 4        plos computational biology   32816
-#&gt; 5  plos neglected tropical diseases   29607
-#&gt; 6                      plos biology   27463
-#&gt; 7                     plos medicine   19179
-#&gt; 8              plos clinical trials     521
-#&gt; 9                  plos collections      15
-#&gt; 10                     plos medicin       9
+#&gt;                                 X1      X2
+#&gt; 1                         plos one 1407216
+#&gt; 2                    plos genetics   54150
+#&gt; 3                   plos pathogens   47708
+#&gt; 4       plos computational biology   41170
+#&gt; 5 plos neglected tropical diseases   41072
+#&gt; 6                     plos biology   30012
+#&gt; 7                    plos medicine   21466
+#&gt; 8             plos clinical trials     496
+#&gt; 9                     plos medicin       9
 #&gt; 
 #&gt; 
 #&gt; $facet_dates
@@ -258,21 +262,20 @@ hr {
 
 <pre><code>#&gt; $facet_queries
 #&gt;        term value
-#&gt; 1 cell,bird    21
+#&gt; 1 cell,bird    24
 #&gt; 
 #&gt; $facet_fields
 #&gt; $facet_fields$journal
-#&gt;                                  X1      X2
-#&gt; 1                          plos one 1083485
-#&gt; 2                     plos genetics   45073
-#&gt; 3                    plos pathogens   39357
-#&gt; 4        plos computational biology   32816
-#&gt; 5  plos neglected tropical diseases   29607
-#&gt; 6                      plos biology   27463
-#&gt; 7                     plos medicine   19179
-#&gt; 8              plos clinical trials     521
-#&gt; 9                  plos collections      15
-#&gt; 10                     plos medicin       9
+#&gt;                                 X1      X2
+#&gt; 1                         plos one 1407216
+#&gt; 2                    plos genetics   54150
+#&gt; 3                   plos pathogens   47708
+#&gt; 4       plos computational biology   41170
+#&gt; 5 plos neglected tropical diseases   41072
+#&gt; 6                     plos biology   30012
+#&gt; 7                    plos medicine   21466
+#&gt; 8             plos clinical trials     496
+#&gt; 9                     plos medicin       9
 #&gt; 
 #&gt; 
 #&gt; $facet_dates
@@ -285,7 +288,8 @@ hr {
 <p>Date faceting</p>
 
 <pre><code class="r">facetplos(q=&#39;*:*&#39;, url=url, facet.date=&#39;publication_date&#39;,
-  facet.date.start=&#39;NOW/DAY-5DAYS&#39;, facet.date.end=&#39;NOW&#39;, facet.date.gap=&#39;+1DAY&#39;)
+  facet.date.start=&#39;NOW/DAY-5DAYS&#39;, facet.date.end=&#39;NOW&#39;, 
+  facet.date.gap=&#39;+1DAY&#39;)
 </code></pre>
 
 <pre><code>#&gt; $facet_queries
@@ -297,12 +301,12 @@ hr {
 #&gt; $facet_dates
 #&gt; $facet_dates$publication_date
 #&gt;                   date value
-#&gt; 1 2015-06-26T00:00:00Z  1918
-#&gt; 2 2015-06-27T00:00:00Z     0
-#&gt; 3 2015-06-28T00:00:00Z  1814
-#&gt; 4 2015-06-29T00:00:00Z  2573
-#&gt; 5 2015-06-30T00:00:00Z   759
-#&gt; 6 2015-07-01T00:00:00Z     0
+#&gt; 1 2017-02-23T00:00:00Z  2749
+#&gt; 2 2017-02-24T00:00:00Z  1878
+#&gt; 3 2017-02-25T00:00:00Z     0
+#&gt; 4 2017-02-26T00:00:00Z   689
+#&gt; 5 2017-02-27T00:00:00Z   689
+#&gt; 6 2017-02-28T00:00:00Z     0
 #&gt; 
 #&gt; 
 #&gt; $facet_ranges
@@ -311,7 +315,8 @@ hr {
 
 <h3>Highlighted search</h3>
 
-<p>Search for the term <em>alcohol</em> in the abstracts of articles, return only 10 results</p>
+<p>Search for the term <em>alcohol</em> in the abstracts of articles, return only 
+10 results</p>
 
 <pre><code class="r">highplos(q=&#39;alcohol&#39;, hl.fl = &#39;abstract&#39;, rows=2)
 </code></pre>
@@ -326,7 +331,8 @@ hr {
 #&gt; [1] &quot;Background: The negative influences of &lt;em&gt;alcohol&lt;/em&gt; on TB management with regard to delays in seeking&quot;
 </code></pre>
 
-<p>Search for the term <em>alcohol</em> in the abstracts of articles, and return fragment size of 20 characters, return only 5 results</p>
+<p>Search for the term <em>alcohol</em> in the abstracts of articles, and return 
+fragment size of 20 characters, return only 5 results</p>
 
 <pre><code class="r">highplos(q=&#39;alcohol&#39;, hl.fl=&#39;abstract&#39;, hl.fragsize=20, rows=2)
 </code></pre>
@@ -341,20 +347,22 @@ hr {
 #&gt; [1] &quot; of &lt;em&gt;alcohol&lt;/em&gt; on TB management&quot;
 </code></pre>
 
-<p>Search for the term <em>experiment</em> across all sections of an article, return id (DOI) and title fl only, search in full articles only (via <code>fq=&#39;doc_type:full&#39;</code>), and return only 10 results</p>
+<p>Search for the term <em>experiment</em> across all sections of an article, return 
+id (DOI) and title fl only, search in full articles only 
+(via <code>fq=&#39;doc_type:full&#39;</code>), and return only 10 results</p>
 
 <pre><code class="r">highplos(q=&#39;everything:&quot;experiment&quot;&#39;, fl=&#39;id,title&#39;, fq=&#39;doc_type:full&#39;,
    rows=2)
 </code></pre>
 
-<pre><code>#&gt; $`10.1371/journal.pone.0039681`
+<pre><code>#&gt; $`10.1371/journal.pone.0154334`
+#&gt; $`10.1371/journal.pone.0154334`$everything
+#&gt; [1] &quot; and designed the &lt;em&gt;experiments&lt;/em&gt;: RJ CM AOC. Performed the &lt;em&gt;experiments&lt;/em&gt;: RJ AOC. Analyzed the data: RJ. Contributed&quot;
+#&gt; 
+#&gt; 
+#&gt; $`10.1371/journal.pone.0039681`
 #&gt; $`10.1371/journal.pone.0039681`$everything
 #&gt; [1] &quot; Selection of Transcriptomics &lt;em&gt;Experiments&lt;/em&gt; Improves Guilt-by-Association Analyses Transcriptomics &lt;em&gt;Experiment&lt;/em&gt;&quot;
-#&gt; 
-#&gt; 
-#&gt; $`10.1371/annotation/9b8741e2-0f5f-49f9-9eaa-1b0cb9b8d25f`
-#&gt; $`10.1371/annotation/9b8741e2-0f5f-49f9-9eaa-1b0cb9b8d25f`$everything
-#&gt; [1] &quot; in the labels under the bars. The labels should read &lt;em&gt;Experiment&lt;/em&gt; 3 / &lt;em&gt;Experiment&lt;/em&gt; 4 instead of &lt;em&gt;Experiment&lt;/em&gt;&quot;
 </code></pre>
 
 <h3>Visualize highligted searches</h3>

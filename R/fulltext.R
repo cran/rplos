@@ -3,19 +3,21 @@
 #' @export
 #' @param doi One or more doi's
 #' @return One or more urls, same length as input vector of dois
-#' @details We give \strong{NA} for DOIs that are for annotations. Those can easily
-#' be removed like \code{Filter(Negate(is.na), res)}
+#' @details We give \strong{NA} for DOIs that are for annotations. Those can 
+#' easily be removed like \code{Filter(Negate(is.na), res)}
 #' @examples \dontrun{
 #' full_text_urls(doi='10.1371/journal.pone.0086169')
 #' full_text_urls(doi='10.1371/journal.pbio.1001845')
-#' full_text_urls(doi=c('10.1371/journal.pone.0086169','10.1371/journal.pbio.1001845'))
+#' full_text_urls(doi=c('10.1371/journal.pone.0086169',
+#'   '10.1371/journal.pbio.1001845'))
 #' 
 #' # contains some annotation DOIs
 #' dois <- searchplos(q = "*:*", fq='doc_type:full', limit=20)$data$id
 #' full_text_urls(dois)
 #' 
 #' # contains no annotation DOIs
-#' dois <- searchplos(q = "*:*", fq=list('doc_type:full', 'article_type:"Research Article"'), 
+#' dois <- searchplos(q = "*:*", 
+#'   fq=list('doc_type:full', 'article_type:"Research Article"'), 
 #' limit=20)$data$id
 #' full_text_urls(dois)
 #' }
@@ -52,46 +54,44 @@ full_text_urls <- function(doi) {
 #'
 #' @export
 #' @param doi One or more DOIs
-#' @param ... Curl options passed on to \code{\link[httr]{GET}}
+#' @param ... Curl options passed on to \code{\link[crul]{HttpClient}}
 #' @param x Input to print method
 #' @return Character string of XML.
 #' @examples \dontrun{
 #' plos_fulltext(doi='10.1371/journal.pone.0086169')
-#' plos_fulltext(c('10.1371/journal.pone.0086169','10.1371/journal.pbio.1001845'))
-#' dois <- searchplos(q = "*:*", fq=list('doc_type:full', 'article_type:"Research Article"'), 
-#' limit=3)$data$id
+#' plos_fulltext(c('10.1371/journal.pone.0086169',
+#'   '10.1371/journal.pbio.1001845'))
+#' dois <- searchplos(q = "*:*", 
+#'   fq = list('doc_type:full', 'article_type:"Research Article"'), 
+#'   limit = 3)$data$id
 #' out <- plos_fulltext(dois)
 #' out[dois[1]]
 #' out[1:2]
 #'
-#' # Extract text from the XML strings
-#' library("XML")
-#' lapply(out[2:3], function(x){
-#'  tmp <- xmlParse(x)
-#'  xpathApply(tmp, "//ref-list")
-#' })
-#'
-#' # Make a text corpus
-#' library("tm")
-#' out_parsed <- lapply(out, function(x){
-#'  tmp <- xmlParse(x)
-#'  xpathApply(tmp, "//body", xmlValue)
-#' })
-#' tmcorpus <- Corpus(VectorSource(out_parsed))
-#' (dtm <- DocumentTermMatrix(tmcorpus))
-#' findFreqTerms(dtm, lowfreq = 50)
+#' # Extract text from the XML strings - xml2 package required
+#' if (requireNamespace("xml2")) {
+#'   library("xml2")
+#'   lapply(out, function(x){
+#'     tmp <- xml2::read_xml(x)
+#'     xml2::xml_find_all(tmp, "//ref-list//ref")
+#'   })
+#' }
+#' 
 #' }
 plos_fulltext <- function(doi, ...){
   urls <- full_text_urls(doi)
-  getfulltext <- function(x){
-    out <- httr::GET(x, ...)
-    httr::warn_for_status(out)
-    if (!out$headers$`content-type` %in% c('application/xml', 'text/xml')) {
-      stop('content-type not one of "application/xml" or "text/xml"', call. = FALSE)
+  getfulltext <- function(x, ...) {
+    cli <- HttpClient$new(url = x)
+    out <- cli$get(...)
+    out$raise_for_status()
+    if (!out$response_headers$`content-type` %in% c('application/xml', 
+                                                    'text/xml')) {
+      stop('content-type not one of "application/xml" or "text/xml"', 
+           call. = FALSE)
     }
-    utf8cont(out)
+    out$parse("UTF-8")
   }
-  res <- lapply(urls, getfulltext)
+  res <- lapply(urls, getfulltext, ...)
   names(res) <- doi
   class(res) <- "plosft"
   return( res )
@@ -103,7 +103,8 @@ print.plosft <- function(x, ...){
   namesprint <- paste(stats::na.omit(names(x)[1:10]), collapse = " ")
   lengths <- vapply(x, nchar, 1, USE.NAMES = FALSE)
   cat(sprintf("%s full-text articles retrieved", length(x)), "\n")
-  cat(sprintf("Min. Length: %s - Max. Length: %s", min(lengths), max(lengths)), "\n")
+  cat(sprintf("Min. Length: %s - Max. Length: %s", min(lengths), 
+              max(lengths)), "\n")
   cat(rplos_wrap(sprintf("DOIs:\n %s ...", namesprint)), "\n\n")
   cat("NOTE: extract xml strings like output['<doi>']")
 }

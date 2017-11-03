@@ -5,8 +5,8 @@
 \title{Base function to search PLoS Journals}
 \usage{
 searchplos(q = NULL, fl = "id", fq = NULL, sort = NULL, start = 0,
-  limit = 10, sleep = 6, terms = NULL, fields = NULL, toquery = NULL,
-  callopts = NULL, ...)
+  limit = 10, sleep = 6, errors = "simple", proxy = NULL,
+  callopts = list(), ...)
 }
 \arguments{
 \item{q}{Search terms (character). You can search on specific fields by
@@ -19,10 +19,10 @@ any combination of search fields (see the dataset \code{plosfields})}
 \item{fq}{List specific fields to filter the query on (if NA, all queried).
 The options for this parameter are the same as those for the fl parameter.
 Note that using this parameter doesn't influence the actual query, but is used
-to filter the resuls to a subset of those you want returned. For example,
+to filter the results to a subset of those you want returned. For example,
 if you want full articles only, you can do \code{'doc_type:full'}. In another example,
 if you want only results from the journal PLOS One, you can do
-\code{'cross_published_journal_key:PLoSONE'}. See \code{\link{journalnamekey}} for journal
+\code{'journal_key:PLoSONE'}. See \code{\link{journalnamekey}} for journal
 abbreviations.}
 
 \item{sort}{Sort results according to a particular field, and specify ascending (asc)
@@ -41,20 +41,21 @@ lapply type call, do sleep parameter is used to prevent your IP address from bei
 blocked. You can only do 10 requests per minute, so one request every 6 seconds is
 about right.}
 
-\item{terms}{DEPRECATED PARAMETER - replaced with the \code{q} param.}
+\item{errors}{(character) One of simple or complete. Simple gives http code and
+error message on an error, while complete gives both http code and error message,
+and stack trace, if available.}
 
-\item{fields}{DEPRECATED PARAMETER - replaced with the \code{fl} param.}
+\item{proxy}{List of arguments for a proxy connection, including one or more of:
+url, port, username, password, and auth. See \code{\link[crul]{proxy}} for
+help, which is used to construct the proxy connection.}
 
-\item{toquery}{DEPRECATED PARAMETER - replaced with the \code{fq} param.}
+\item{callopts}{(list) optional curl options passed to \code{\link[crul]{HttpClient}}}
 
-\item{callopts}{DEPRECATED PARAMETER - replaced with the \code{...} param.}
-
-\item{...}{Optional additional curl options (debugging tools mostly), passed on to
-\code{\link[httr]{GET}}}
+\item{...}{Additional Solr arguments}
 }
 \value{
-An object of class "plos", with a list of length two, each element being
-a list itself.
+An object of class "plos", with a list of length two, each
+element being a list itself.
 }
 \description{
 Base function to search PLoS Journals
@@ -74,21 +75,22 @@ in R, give different results than when searching for articles on the PLOS websit
 not sure what exact defaults they use on their website. There are a few things to consider.
 You can tweak which types of articles are returned: Try using the \code{article_type}
 filter in the \code{fq} parameter. For which journal to search, e.g., do
-\code{'cross_published_journal_key:PLoSONE'}. See \code{journalnamekey()} for journal
+\code{'journal_key:PLoSONE'}. See \code{journalnamekey()} for journal
 abbreviations.
 }
 
 \section{Phrase searching}{
 
-To search phrases, e.g., \strong{synthetic biology} as a single item, rather than 
+To search phrases, e.g., \strong{synthetic biology} as a single item, rather than
 separate occurrences of \strong{synthetic} and \strong{biology}, simply put double
 quotes around the phrase. For example, to search for cases of \strong{synthetic biology},
 do \code{searchplos(q = '"synthetic biology"')}.
 
 You can modify phrase searches as well. For example,
-\code{searchplos(q = '"synthetic biology" ~ 10')} asks for cases of 
+\code{searchplos(q = '"synthetic biology" ~ 10')} asks for cases of
 \strong{synthetic biology} within 10 words of each other. See examples.
 }
+
 \examples{
 \dontrun{
 searchplos(q='ecology', fl=c('id','publication_date'), limit = 2)
@@ -100,13 +102,13 @@ out <- searchplos(q="*:*", fl='id', fq='doc_type:full', start=0, limit=250)
 head(out$data)
 
 # Get DOIs for only PLoS One articles
-out <- searchplos(q="*:*", fl='id', fq='cross_published_journal_key:PLoSONE', start=0, limit=15)
-head(out$data)
+out <- searchplos(q="*:*", fl='id', fq='journal_key:PLoSONE', start=0, limit=15)
+out$data
 
 # Get DOIs for full article in PLoS One
-out <- searchplos(q="*:*", fl='id', fq=list('cross_published_journal_key:PLoSONE',
+out <- searchplos(q="*:*", fl='id', fq=list('journal_key:PLoSONE',
    'doc_type:full'), limit=50)
-head(out$data)
+out$data
 
 # Serch for many q
 q <- c('ecology','evolution','science')
@@ -116,8 +118,8 @@ lapply(q, function(x) searchplos(x, limit=2))
 out <- searchplos(q="*:*", fl=c('id','counter_total_all','alm_twitterCount'),fq='doc_type:full')
 out_sorted <- searchplos(q="*:*", fl=c('id','counter_total_all','alm_twitterCount'),
    fq='doc_type:full', sort='counter_total_all desc')
-head(out$data)
-head(out_sorted$data)
+out$data
+out_sorted$data
 
 # Show me all articles that have these two words less then about 15 words apart.
 searchplos(q='everything:"sports alcohol"~15', fl='title', fq='doc_type:full')
@@ -157,6 +159,8 @@ searchplos(q='*:*', fl=c('id','article_type'),
 # Get eissn codes
 searchplos(q='*:*', fl=c('id','journal','eissn','cross_published_journal_eissn'),
    fq="doc_type:full", limit = 60)
-}
-}
 
+searchplos(q='*:*', fl=c('id','journal','eissn','cross_published_journal_eissn'),
+   limit = 2000)
+}
+}

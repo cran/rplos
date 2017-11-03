@@ -209,7 +209,9 @@ hr {
 
 <h1>Full text</h1>
 
-<p>Search functions in <code>rplos</code> can be used to get back full text in addition to any section of an article. However, if you prefer XML, this vignette is for you.</p>
+<p>Search functions in <code>rplos</code> can be used to get back full text in addition to 
+any section of an article. However, if you prefer XML, this vignette is 
+for you.</p>
 
 <h3>Load package from CRAN</h3>
 
@@ -225,66 +227,67 @@ hr {
 
 <p>Here&#39;s the URL for XML full text for the DOI <code>10.1371/journal.pone.0086169</code></p>
 
-<pre><code class="r">full_text_urls(doi=&#39;10.1371/journal.pone.0086169&#39;)
+<pre><code class="r">full_text_urls(doi = &#39;10.1371/journal.pone.0086169&#39;)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0086169&amp;representation=XML&quot;
+<pre><code>#&gt; [1] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0086169&amp;type=manuscript&quot;
 </code></pre>
 
 <p>And for the DOI <code>10.1371/journal.pbio.1001845</code></p>
 
-<pre><code class="r">full_text_urls(doi=&#39;10.1371/journal.pbio.1001845&#39;)
+<pre><code class="r">full_text_urls(doi = &#39;10.1371/journal.pbio.1001845&#39;)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.1001845&amp;representation=XML&quot;
+<pre><code>#&gt; [1] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1001845&amp;type=manuscript&quot;
 </code></pre>
 
 <p>The function is vectorized, so you can pass in many DOIs</p>
 
-<pre><code class="r">full_text_urls(doi=c(&#39;10.1371/journal.pone.0086169&#39;,&#39;10.1371/journal.pbio.1001845&#39;))
+<pre><code class="r">full_text_urls(doi = c(&#39;10.1371/journal.pone.0086169&#39;, 
+                       &#39;10.1371/journal.pbio.1001845&#39;))
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0086169&amp;representation=XML&quot;    
-#&gt; [2] &quot;http://www.plosbiology.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pbio.1001845&amp;representation=XML&quot;
+<pre><code>#&gt; [1] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0086169&amp;type=manuscript&quot;    
+#&gt; [2] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1001845&amp;type=manuscript&quot;
 </code></pre>
 
 <p>Use <code>searchplos()</code> to get a lot of DOIs, then get the URLs for full text XML</p>
 
-<pre><code class="r">dois &lt;- searchplos(q = &quot;*:*&quot;, fq=&#39;doc_type:full&#39;, limit=20)$data$id
+<pre><code class="r">dois &lt;- searchplos(q = &quot;*:*&quot;, fq = &#39;doc_type:full&#39;, limit = 20)$data$id
 full_text_urls(dois)
 </code></pre>
 
-<pre><code>#&gt;  [1] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031384&amp;representation=XML&quot;
-#&gt;  [2] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031385&amp;representation=XML&quot;
-#&gt;  [3] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0107441&amp;representation=XML&quot;
-#&gt;  [4] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0000339&amp;representation=XML&quot;
-#&gt;  [5] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0046739&amp;representation=XML&quot;
-#&gt;  [6] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0061900&amp;representation=XML&quot;
-#&gt;  [7] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0061895&amp;representation=XML&quot;
-#&gt;  [8] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0077194&amp;representation=XML&quot;
-#&gt;  [9] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0015930&amp;representation=XML&quot;
-#&gt; [10] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0123741&amp;representation=XML&quot;
-#&gt; [11] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031375&amp;representation=XML&quot;
-#&gt; [12] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0061894&amp;representation=XML&quot;
-#&gt; [13] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0123740&amp;representation=XML&quot;
-#&gt; [14] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0107433&amp;representation=XML&quot;
-#&gt; [15] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0000334&amp;representation=XML&quot;
-#&gt; [16] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0031374&amp;representation=XML&quot;
-#&gt; [17] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0092196&amp;representation=XML&quot;
-#&gt; [18] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0046713&amp;representation=XML&quot;
-#&gt; [19] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0046715&amp;representation=XML&quot;
-#&gt; [20] &quot;http://www.plosone.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pone.0000335&amp;representation=XML&quot;
+<pre><code>#&gt;  [1] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1000942&amp;type=manuscript&quot;
+#&gt;  [2] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0130089&amp;type=manuscript&quot;     
+#&gt;  [3] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0165670&amp;type=manuscript&quot;     
+#&gt;  [4] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1002909&amp;type=manuscript&quot;
+#&gt;  [5] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1004317&amp;type=manuscript&quot;
+#&gt;  [6] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1002259&amp;type=manuscript&quot; 
+#&gt;  [7] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1003554&amp;type=manuscript&quot;
+#&gt;  [8] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1004432&amp;type=manuscript&quot;
+#&gt;  [9] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0162873&amp;type=manuscript&quot;     
+#&gt; [10] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0163015&amp;type=manuscript&quot;     
+#&gt; [11] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1003597&amp;type=manuscript&quot;
+#&gt; [12] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1004934&amp;type=manuscript&quot;
+#&gt; [13] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1004795&amp;type=manuscript&quot;
+#&gt; [14] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.0000004&amp;type=manuscript&quot; 
+#&gt; [15] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1003631&amp;type=manuscript&quot;
+#&gt; [16] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1003549&amp;type=manuscript&quot;
+#&gt; [17] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1003507&amp;type=manuscript&quot;
+#&gt; [18] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.0000040&amp;type=manuscript&quot; 
+#&gt; [19] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.0000026&amp;type=manuscript&quot; 
+#&gt; [20] &quot;http://journals.plos.org/plosgenetics/article/file?id=10.1371/journal.pgen.1003332&amp;type=manuscript&quot;
 </code></pre>
 
 <h3>Get XML</h3>
 
 <p>Get full text XML of PLOS papers given a DOI</p>
 
-<pre><code class="r">plos_fulltext(doi=&#39;10.1371/journal.pone.0086169&#39;)
+<pre><code class="r">plos_fulltext(doi = &#39;10.1371/journal.pone.0086169&#39;)
 </code></pre>
 
 <pre><code>#&gt; 1 full-text articles retrieved 
-#&gt; Min. Length: 111132 - Max. Length: 111132 
+#&gt; Min. Length: 110717 - Max. Length: 110717 
 #&gt; DOIs: 10.1371/journal.pone.0086169 ... 
 #&gt; 
 #&gt; NOTE: extract xml strings like output[&#39;&lt;doi&gt;&#39;]
@@ -296,124 +299,53 @@ full_text_urls(dois)
 </code></pre>
 
 <pre><code>#&gt; 2 full-text articles retrieved 
-#&gt; Min. Length: 111132 - Max. Length: 143937 
+#&gt; Min. Length: 110717 - Max. Length: 143442 
 #&gt; DOIs: 10.1371/journal.pone.0086169 10.1371/journal.pbio.1001845 ... 
 #&gt; 
 #&gt; NOTE: extract xml strings like output[&#39;&lt;doi&gt;&#39;]
 </code></pre>
 
-<p>Get many DOIs, then index to get the full XML of the one you want (output not shown)</p>
+<p>Get many DOIs, then index to get the full XML of the one you want 
+(output not shown)</p>
 
-<pre><code class="r">dois &lt;- searchplos(q = &quot;*:*&quot;, fq=&#39;doc_type:full&#39;, limit=3)$data$id
+<pre><code class="r">dois &lt;- searchplos(q = &quot;*:*&quot;, fq = &#39;doc_type:full&#39;, limit = 3)$data$id
 out &lt;- plos_fulltext(dois)
 xml &lt;- out[dois[1]][[1]]
 </code></pre>
 
 <p>Extract the abstract from the XML</p>
 
-<pre><code class="r">library(&quot;XML&quot;)
-xpathSApply(xmlParse(xml), &quot;//abstract/p&quot;, xmlValue)
+<pre><code class="r">if (requireNamespace(&quot;xml2&quot;)) {
+  library(&quot;xml2&quot;)
+  xml_text(xml_find_all(read_xml(xml), &quot;//abstract/p&quot;))
+}
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;Pancreatic adenocarcinoma, a desmoplastic disease, is the fourth leading cause of cancer-related death in the Western world due, in large part, to locally invasive primary tumor growth and ensuing metastasis. SPARC is a matricellular protein that governs extracellular matrix (ECM) deposition and maturation during tissue remodeling, particularly, during wound healing and tumorigenesis. In the present study, we sought to determine the mechanism by which lack of host SPARC alters the tumor microenvironment and enhances invasion and metastasis of an orthotopic model of pancreatic cancer. We identified that levels of active TGFÎ²1 were increased significantly in tumors grown in SPARC-null mice. TGFÎ²1 contributes to many aspects of tumor development including metastasis, endothelial cell permeability, inflammation and fibrosis, all of which are altered in the absence of stromal-derived SPARC. Given these results, we performed a survival study to assess the contribution of increased TGFÎ²1 activity to tumor progression in SPARC-null mice using losartan, an angiotensin II type 1 receptor antagonist that diminishes TGFÎ²1 expression and activation in vivo. Tumors grown in SPARC-null mice progressed more quickly than those grown in wild-type littermates leading to a significant reduction in median survival. However, median survival of SPARC-null animals treated with losartan was extended to that of losartan-treated wild-type controls. In addition, losartan abrogated TGFÎ² induced gene expression, reduced local invasion and metastasis, decreased vascular permeability and altered the immune profile of tumors grown in SPARC-null mice. These data support the concept that aberrant TGFÎ²1-activation in the absence of host SPARC contributes significantly to tumor progression and suggests that SPARC, by controlling ECM deposition and maturation, can regulate TGFÎ² availability and activation.&quot;
+<pre><code>#&gt; [1] &quot;Quantitative linkages between individual organism movements and the resulting population distributions are fundamental to understanding a wide range of ecological processes, including rates of reproduction, consumption, and mortality, as well as the spread of diseases and invasions. Typically, quantitative data are collected on either movement behaviors or population distributions, rarely both. This study combines empirical observations and model simulations to gain a mechanistic understanding and predictive ability of the linkages between both individual movement behaviors and population distributions of a single-celled planktonic herbivore. In the laboratory, microscopic 3D movements and macroscopic population distributions were simultaneously quantified in a 1L tank, using automated video- and image-analysis routines. The vertical velocity component of cell movements was extracted from the empirical data and used to motivate a series of correlated random walk models that predicted population distributions. Validation of the model predictions with empirical data was essential to distinguish amongst a number of theoretically plausible model formulations. All model predictions captured the essence of the population redistribution (mean upward drift) but only models assuming long correlation times (minute), captured the variance in population distribution. Models assuming correlation times of 8 minutes predicted the least deviation from the empirical observations. Autocorrelation analysis of the empirical data failed to identify a de-correlation time in the up to 30-second-long swimming trajectories. These minute-scale estimates are considerably greater than previous estimates of second-scale correlation times. Considerable cell-to-cell variation and behavioral heterogeneity were critical to these results. Strongly correlated random walkers were predicted to have significantly greater dispersal distances and more rapid encounters with remote targets (e.g. resource patches, predators) than weakly correlated random walkers. The tendency to disperse rapidly in the absence of aggregative stimuli has important ramifications for the ecology and biogeography of planktonic organisms that perform this kind of random walk.&quot;
+#&gt; [2] &quot;Organism movement is fundamental to how organisms interact with each other and the environment. Such movements are also important on the population level and determine the spread of disease and invasion, reproduction, consumption, and mortality. Theoretical ecologists have sought to predict population dispersal rates, which are often hard to measure, from individual movement behaviors, which are often easier to measure. This problem has been non-trivial. This manuscript contributes seldom available, simultaneously measured movement behaviors and population distributions of a single celled planktonic organism. The empirical data are used to distinguish amongst a set of plausible theoretical modeling approaches to suggest that organism movements are highly correlated, meaning movement direction and speed is consistent over several minutes. Previous estimates suggested persistence only lasted several seconds. Minute-scale correlations result in much more rapid organism dispersal and greater dispersal distance, indicating that organisms encounter and impact a greater portion of their surrounding habitat than previously suspected.&quot;
 </code></pre>
 
 <p>Extract reference lists, just give back first one from each for brevity sake</p>
 
-<pre><code class="r">lapply(out[2:3], function(x){
- xpathApply(xmlParse(x), &quot;//ref-list/ref&quot;)[[1]]
-})
+<pre><code class="r">if (requireNamespace(&quot;xml2&quot;)) {
+  library(&quot;xml2&quot;)
+  lapply(out[2:3], function(x){
+    xml_find_all(read_xml(x), &quot;//ref-list/ref&quot;)[[1]]
+  })
+}
 </code></pre>
 
-<pre><code>#&gt; $`10.1371/journal.pone.0031385`
-#&gt; &lt;ref id=&quot;pone.0031385-Machesky1&quot;&gt;
-#&gt;   &lt;label&gt;1&lt;/label&gt;
-#&gt;   &lt;element-citation publication-type=&quot;journal&quot; xlink:type=&quot;simple&quot;&gt;
-#&gt;     &lt;person-group person-group-type=&quot;author&quot;&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Machesky&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;LM&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Atkinson&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;SJ&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Ampe&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;C&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Vandekerckhove&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;J&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;       &lt;name name-style=&quot;western&quot;&gt;
-#&gt;         &lt;surname&gt;Pollard&lt;/surname&gt;
-#&gt;         &lt;given-names&gt;TD&lt;/given-names&gt;
-#&gt;       &lt;/name&gt;
-#&gt;     &lt;/person-group&gt;
-#&gt;     &lt;year&gt;1994&lt;/year&gt;
-#&gt;     &lt;article-title&gt;Purification of a cortical complex containing two unconventional actins from Acanthamoeba by affinity chromatography on profilin- agarose.&lt;/article-title&gt;
-#&gt;     &lt;source&gt;J Cell Biol&lt;/source&gt;
-#&gt;     &lt;volume&gt;127&lt;/volume&gt;
-#&gt;     &lt;fpage&gt;107&lt;/fpage&gt;
-#&gt;     &lt;lpage&gt;115&lt;/lpage&gt;
-#&gt;   &lt;/element-citation&gt;
-#&gt; &lt;/ref&gt; 
+<pre><code>#&gt; $`10.1371/journal.pone.0130089`
+#&gt; {xml_node}
+#&gt; &lt;ref id=&quot;pone.0130089.ref001&quot;&gt;
+#&gt; [1] &lt;label&gt;1&lt;/label&gt;
+#&gt; [2] &lt;mixed-citation xlink:type=&quot;simple&quot; publication-type=&quot;book&quot;&gt;&lt;name na ...
 #&gt; 
-#&gt; $`10.1371/journal.pone.0107441`
-#&gt; &lt;ref id=&quot;pone.0107441-Daszak1&quot;&gt;
-#&gt;   &lt;label&gt;1&lt;/label&gt;
-#&gt;   &lt;mixed-citation publication-type=&quot;journal&quot; xlink:type=&quot;simple&quot;&gt;&lt;name name-style=&quot;western&quot;&gt;&lt;surname&gt;Daszak&lt;/surname&gt;&lt;given-names&gt;P&lt;/given-names&gt;&lt;/name&gt;, &lt;name name-style=&quot;western&quot;&gt;&lt;surname&gt;Cunningham&lt;/surname&gt;&lt;given-names&gt;AA&lt;/given-names&gt;&lt;/name&gt;, &lt;name name-style=&quot;western&quot;&gt;&lt;surname&gt;Hyatt&lt;/surname&gt;&lt;given-names&gt;AD&lt;/given-names&gt;&lt;/name&gt; (&lt;year&gt;2000&lt;/year&gt;) &lt;article-title&gt;Emerging Infectious Diseases of Wildlifeâ Threats to Biodiversity and Human Health&lt;/article-title&gt;. &lt;source&gt;Science (80â)&lt;/source&gt; &lt;volume&gt;287&lt;/volume&gt;: &lt;fpage&gt;443&lt;/fpage&gt;â&lt;lpage&gt;449&lt;/lpage&gt; Available: &lt;ext-link ext-link-type=&quot;uri&quot; xlink:href=&quot;http://www.sciencemag.org/cgi/doi/10.1126/science.287.5452.443&quot; xlink:type=&quot;simple&quot;&gt;http://www.sciencemag.org/cgi/doi/10.1126/science.287.5452.443&lt;/ext-link&gt; Accessed 2 March 2013.&lt;/mixed-citation&gt;
-#&gt; &lt;/ref&gt;
-</code></pre>
-
-<p>Make a text corpus</p>
-
-<pre><code class="r">library(&quot;tm&quot;)
-out_parsed &lt;- lapply(out, function(x){
- xpathApply(xmlParse(x), &quot;//body&quot;, xmlValue)
-})
-tmcorpus &lt;- Corpus(VectorSource(out_parsed))
-(dtm &lt;- DocumentTermMatrix(tmcorpus))
-</code></pre>
-
-<pre><code>#&gt; &lt;&lt;DocumentTermMatrix (documents: 3, terms: 5334)&gt;&gt;
-#&gt; Non-/sparse entries: 6513/9489
-#&gt; Sparsity           : 59%
-#&gt; Maximal term length: 109
-#&gt; Weighting          : term frequency (tf)
-</code></pre>
-
-<pre><code class="r">findFreqTerms(dtm, lowfreq = 50)
-</code></pre>
-
-<pre><code>#&gt;  [1] &quot;(figure&quot;                          &quot;actin&quot;                           
-#&gt;  [3] &quot;all&quot;                              &quot;amphibian&quot;                       
-#&gt;  [5] &quot;and&quot;                              &quot;are&quot;                             
-#&gt;  [7] &quot;âµm&quot;                              &quot;barbed&quot;                          
-#&gt;  [9] &quot;between&quot;                          &quot;bundles&quot;                         
-#&gt; [11] &quot;catesbeianus&quot;                     &quot;cell&quot;                            
-#&gt; [13] &quot;cells&quot;                            &quot;comet&quot;                           
-#&gt; [15] &quot;density&quot;                          &quot;each&quot;                            
-#&gt; [17] &quot;filament&quot;                         &quot;filaments&quot;                       
-#&gt; [19] &quot;for&quot;                              &quot;from&quot;                            
-#&gt; [21] &quot;grown&quot;                            &quot;growth&quot;                          
-#&gt; [23] &quot;have&quot;                             &quot;host&quot;                            
-#&gt; [25] &quot;individual&quot;                       &quot;individuals&quot;                     
-#&gt; [27] &quot;infection&quot;                        &quot;losartan&quot;                        
-#&gt; [29] &quot;low&quot;                              &quot;mg2+&quot;                            
-#&gt; [31] &quot;mice&quot;                             &quot;motility&quot;                        
-#&gt; [33] &quot;not&quot;                              &quot;number&quot;                          
-#&gt; [35] &quot;other&quot;                            &quot;our&quot;                             
-#&gt; [37] &quot;pan02&quot;                            &quot;sparc&quot;                           
-#&gt; [39] &quot;sparc+/+&quot;                         &quot;sparcâ\u0088\u0092/â\u0088\u0092&quot;
-#&gt; [41] &quot;species&quot;                          &quot;tail&quot;                            
-#&gt; [43] &quot;tgfî²1&quot;                           &quot;that&quot;                            
-#&gt; [45] &quot;the&quot;                              &quot;this&quot;                            
-#&gt; [47] &quot;total&quot;                            &quot;treatment&quot;                       
-#&gt; [49] &quot;tumor&quot;                            &quot;tumors&quot;                          
-#&gt; [51] &quot;was&quot;                              &quot;were&quot;                            
-#&gt; [53] &quot;wetland&quot;                          &quot;with&quot;
+#&gt; $`10.1371/journal.pone.0165670`
+#&gt; {xml_node}
+#&gt; &lt;ref id=&quot;pone.0165670.ref001&quot;&gt;
+#&gt; [1] &lt;label&gt;1&lt;/label&gt;
+#&gt; [2] &lt;mixed-citation publication-type=&quot;book&quot; xlink:type=&quot;simple&quot;&gt;&lt;collab&gt; ...
 </code></pre>
 
 </body>

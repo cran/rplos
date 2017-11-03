@@ -2,8 +2,8 @@
 #'
 #' @export
 #' @template plos
-#' @return An object of class "plos", with a list of length two, each element being
-#' a list itself.
+#' @return An object of class "plos", with a list of length two, each
+#' element being a list itself.
 #' @examples \dontrun{
 #' searchplos(q='ecology', fl=c('id','publication_date'), limit = 2)
 #' searchplos('ecology', fl=c('id','publication_date'), limit = 2)
@@ -14,13 +14,13 @@
 #' head(out$data)
 #'
 #' # Get DOIs for only PLoS One articles
-#' out <- searchplos(q="*:*", fl='id', fq='cross_published_journal_key:PLoSONE', start=0, limit=15)
-#' head(out$data)
+#' out <- searchplos(q="*:*", fl='id', fq='journal_key:PLoSONE', start=0, limit=15)
+#' out$data
 #'
 #' # Get DOIs for full article in PLoS One
-#' out <- searchplos(q="*:*", fl='id', fq=list('cross_published_journal_key:PLoSONE',
+#' out <- searchplos(q="*:*", fl='id', fq=list('journal_key:PLoSONE',
 #'    'doc_type:full'), limit=50)
-#' head(out$data)
+#' out$data
 #'
 #' # Serch for many q
 #' q <- c('ecology','evolution','science')
@@ -30,8 +30,8 @@
 #' out <- searchplos(q="*:*", fl=c('id','counter_total_all','alm_twitterCount'),fq='doc_type:full')
 #' out_sorted <- searchplos(q="*:*", fl=c('id','counter_total_all','alm_twitterCount'),
 #'    fq='doc_type:full', sort='counter_total_all desc')
-#' head(out$data)
-#' head(out_sorted$data)
+#' out$data
+#' out_sorted$data
 #'
 #' # Show me all articles that have these two words less then about 15 words apart.
 #' searchplos(q='everything:"sports alcohol"~15', fl='title', fq='doc_type:full')
@@ -71,18 +71,13 @@
 #' # Get eissn codes
 #' searchplos(q='*:*', fl=c('id','journal','eissn','cross_published_journal_eissn'),
 #'    fq="doc_type:full", limit = 60)
+#'
+#' searchplos(q='*:*', fl=c('id','journal','eissn','cross_published_journal_eissn'),
+#'    limit = 2000)
 #' }
 
-searchplos <- function(q = NULL, fl = 'id', fq = NULL, sort = NULL, start = 0, limit = 10,
-  sleep = 6, terms=NULL, fields=NULL, toquery=NULL, callopts=NULL, ...)
-{
-  calls <- names(sapply(match.call(), deparse))[-1]
-  calls_vec <- c("terms", "fields", "toquery", "callopts") %in% calls
-  if(any(calls_vec))
-    stop("The parameters terms, fields, toquery, and callopts replaced with q, fl, fq, and ..., respectively")
-
-  # Function to trim leading and trailing whitespace, including newlines
-  trim <- function (x) gsub("\\n\\s+", " ", gsub("^\\s+|\\s+$", "", x))
+searchplos <- function(q = NULL, fl = 'id', fq = NULL, sort = NULL, start = 0,
+  limit = 10, sleep = 6, errors = "simple", proxy = NULL, callopts = list(), ...) {
 
   # Make sure limit is a numeric or integer
   limit <- tryCatch(as.numeric(as.character(limit)), warning=function(e) e)
@@ -101,126 +96,80 @@ searchplos <- function(q = NULL, fl = 'id', fq = NULL, sort = NULL, start = 0, l
     }
   }
 
+  if (is.null(limit)) limit <- 999
+  if (limit == 0) fl <- NULL
+  fl <- paste(fl, collapse = ",")
+
   args <- list()
-  if(!is.null(fq[[1]])) {
-    if(length(fq)==1) { args$fq <- fq } else {
-      args <- fq; names(args) <- rep("fq",length(args))
-    }
-  } else { NULL }
+ 	if (!is.null(fq[[1]])) {
+  	if (length(fq) == 1) {
+  		args$fq <- fq
+  	} else {
+    	args <- fq
+    	names(args) <- rep("fq",length(args))
+  	}
+  }
+  args <- c(args, ploscompact(list(q = q, fl = fl, start = start,
+                       rows = limit, sort = sort, wt = 'json')))
 
-	if(is.null(limit)){limit <- 999} else{limit <- limit}
-  if(limit == 0) fl <- NULL
-  fl <- paste(fl, collapse=",")
-  args <- c(args, ploscompact(list(q=q, fl=fl, start=start, rows=limit, sort=sort, wt='json')))
+	getnum_tmp <- suppressMessages(
+	  conn_plos$search(params = list(q = q, fl = fl, rows = 0, wt = "json"))
+	)
+	getnumrecords <- attr(getnum_tmp, "numFound")
 
-	argsgetnum <- list(q=q, rows=0, wt="json")
-	if (length(argsgetnum) == 0) argsgetnum <- NULL
-	getnum_tmp <- GET(pbase(), query = argsgetnum)
-  stop_for_status(getnum_tmp)
-  getnum <- jsonlite::fromJSON(utf8cont(getnum_tmp), FALSE)
-	getnumrecords <- getnum$response$numFound
-	if(getnumrecords > limit){getnumrecords <- limit} else{getnumrecords <- getnumrecords}
+	if (getnumrecords > limit) {
+	  getnumrecords <- limit
+	} else {
+	  getnumrecords <- getnumrecords
+	}
 
-	if(min(getnumrecords, limit) < 1000) {
-	  if(!is.null(limit))
-	    args$rows <- limit
+	if (min(getnumrecords, limit) < 1000) {
+	  if (!is.null(limit)) args$rows <- limit
 	  if (length(args) == 0) args <- NULL
-	  tt <- GET(pbase(), query=args, ...)
-    jsonout <- check_response(tt)
-	  tempresults <- jsonout$response$docs
-	  tempresults <- lapply(tempresults, function(x) lapply(x, trim))
-
-	  # remove any empty lists
-	  tempresults <- tempresults[!sapply(tempresults, length) == 0]
-
-    # combine results if more than length=1
-	  lengths <- sapply(tempresults, function(x) lapply(x, length))
-    if(any(unlist(lengths) > 1)){
-      foo <- function(x){
-        if(length(x) > 1){ paste(x, collapse="; ") } else { x }
-      }
-      tempresults <- lapply(tempresults, function(x) lapply(x, foo))
-    }
-
-    res <- tempresults
-
-	  resdf  <- plos2df(res)
-    return( list(meta=get_meta(jsonout$response), data=resdf) )
-	} else
-	{
+	  jsonout <- suppressMessages(
+	    conn_plos$search(params = args, callopts = callopts,
+	    	minOptimizedRows = FALSE, ...)
+	  )
+	  meta <- dplyr::data_frame(
+	    numFound = attr(jsonout, "numFound"),
+	    start = attr(jsonout, "start")
+	  )
+    return(list(meta = meta, data = jsonout))
+	} else {
 	  byby <- 500
-	  getvecs <- seq(from=1, to=getnumrecords, by=byby)
+	  getvecs <- seq(from = 1, to = getnumrecords, by = byby)
 	  lastnum <- as.numeric(strextract(getnumrecords, "[0-9]{3}$"))
-	  if(lastnum==0)
+	  if (lastnum == 0)
 	    lastnum <- byby
-	  if(lastnum > byby){
-	    lastnum <- getnumrecords-getvecs[length(getvecs)]
-	  } else
-	  {lastnum <- lastnum}
-	  getrows <- c(rep(byby, length(getvecs)-1), lastnum)
+	  if (lastnum > byby) {
+	    lastnum <- getnumrecords - getvecs[length(getvecs)]
+	  } else {
+	    lastnum <- lastnum
+	  }
+	  getrows <- c(rep(byby, length(getvecs) - 1), lastnum)
 	  out <- list()
-	  message("Looping - printing iterations...")
-	  for(i in 1:length(getvecs)) {
-	    cat(i,"\n")
+	  message("Looping - printing progress ...")
+	  for (i in seq_along(getvecs)) {
 	    args$start <- getvecs[i]
 	    args$rows <- getrows[i]
 	    if (length(args) == 0) args <- NULL
-	    tt <- GET(pbase(), query=args, ...)
-	    jsonout <- check_response(tt)
-	    tempresults <- jsonout$response$docs
-	    tempresults <- lapply(tempresults, function(x) lapply(x, trim))
-
-	    # remove any empty lists
-	    tempresults <- tempresults[!sapply(tempresults, length) == 0]
-
-	    # combine results if more than length=1
-	    lengths <- sapply(tempresults, function(x) lapply(x, length))
-	    if(any(unlist(lengths) > 1)){
-	      foo <- function(x){
-	        if(length(x) > 1){ paste(x, collapse="; ") } else { x }
-	      }
-	      tempresults <- lapply(tempresults, function(x) lapply(x, foo))
-	    }
-      out[[i]] <- tempresults
+	    jsonout <- suppressMessages(conn_plos$search(
+	      params = ploscompact(list(q = args$q, fl = args$fl, fq = args$fq,
+	      sort = args$sort,
+	      rows = args$rows, start = args$start,
+	      wt = "json")), minOptimizedRows = FALSE, callopts = callopts, ...
+	    ))
+	    out[[i]] <- jsonout
 	  }
-
-	  resdf  <- plos2df(out, TRUE)
-	  return( list(meta=get_meta(jsonout$response), data=resdf) )
+	  resdf  <- dplyr::bind_rows(out)
+	  meta <- dplyr::data_frame(
+	    numFound = attr(jsonout, "numFound"),
+	    start = attr(jsonout, "start")
+	  )
+	  return(list(meta = meta, data = resdf))
 	}
   Sys.setenv(plostime = as.numeric(now()))
 }
 
-plos2df <- function(input, many=FALSE)
-{
-  if(many){
-    input <- do.call(c, input)
-  }
-
-  if(is.null(input)){
-    datout <- NULL
-  } else{
-    if(length(input) == 0){
-      datout <- NA
-    } else{
-      maxlendat <- max(sapply(input, length))
-      namesdat <- names(input[which.max(sapply(input, length))][[1]])
-      dat <- lapply(input, function(x){
-        if(!length(x) < maxlendat){ x } else {
-          fillnames <- namesdat[!namesdat %in% names(x)]
-          tmp <- c(rep("none", length(fillnames)), x)
-          names(tmp)[seq_along(fillnames)] <- fillnames
-          tmp[match(namesdat, names(tmp))]
-        }
-      })
-      datout <- data.frame(bind_rows(lapply(dat, data.frame, stringsAsFactors = FALSE)))
-    }
-  }
-  return( datout )
-}
-
-get_meta <- function(x){
-  nms <- c('numFound','start','maxScore')
-  tmp <- stats::setNames(x[nms], nms)
-  tmp[sapply(tmp, is.null)] <- NA
-  data.frame(tmp, stringsAsFactors = FALSE)
-}
+# Function to trim leading and trailing whitespace, including newlines
+trim <- function(x) gsub("\\n\\s+", " ", gsub("^\\s+|\\s+$", "", x))

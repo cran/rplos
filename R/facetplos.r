@@ -20,13 +20,9 @@
 #' ## Many facet.query terms
 #' facetplos(q='*:*', facet.field='journal', facet.query='cell,bird')
 #'
-#' # Date faceting
-#' facetplos(q='*:*', facet.date='publication_date',
-#'  facet.date.start='NOW/DAY-5DAYS', facet.date.end='NOW', facet.date.gap='+1DAY')
-#'
 #' # Range faceting
 #' facetplos(q='*:*', url=url, facet.range='counter_total_all',
-#'  facet.range.start=5, facet.range.end=1000, facet.range.gap=10)
+#'    facet.range.start=5, facet.range.end=1000, facet.range.gap=10)
 #' facetplos(q='alcohol', facet.range='alm_facebookCount', facet.range.start=1000,
 #'    facet.range.end=5000, facet.range.gap = 100)
 #'
@@ -48,7 +44,8 @@ facetplos <- function(q="*:*", facet.query=NA, facet.field=NA,
   facet.date.gap=NA,facet.date.hardend=NA,facet.date.other=NA,
   facet.date.include=NA,facet.range=NA,facet.range.start=NA,facet.range.end=NA,
   facet.range.gap=NA,facet.range.hardend=NA,facet.range.other=NA,
-  facet.range.include=NA, start=NA, rows=NA, url=NA, sleep = 6, callopts=list(), ...)
+  facet.range.include=NA, start=NA, rows=NA, url=NA, sleep = 6,
+  errors = "simple", proxy = NULL, callopts=list(), ...)
 {
   # Enforce rate limits
   if (!Sys.getenv('plostime') == "") {
@@ -59,7 +56,7 @@ facetplos <- function(q="*:*", facet.query=NA, facet.field=NA,
     }
   }
 
-  out <- solr_facet(facet.query=facet.query,facet.field=facet.field,
+  return(conn_plos$facet(params = list(q = q, facet.query=facet.query,facet.field=facet.field,
     facet.prefix=facet.prefix,facet.sort=facet.sort,facet.limit=facet.limit,
     facet.offset=facet.offset,facet.mincount=facet.mincount,facet.missing=facet.missing,
     facet.method=facet.method,facet.enum.cache.minDf=facet.enum.cache.minDf,
@@ -70,9 +67,6 @@ facetplos <- function(q="*:*", facet.query=NA, facet.field=NA,
     facet.range.start=facet.range.start,facet.range.end=facet.range.end,
     facet.range.gap=facet.range.gap,facet.range.hardend=facet.range.hardend,
     facet.range.other=facet.range.other,facet.range.include=facet.range.include,
-    start=start, rows=rows, base=pbase(), callopts=callopts, ...)
-
-  return( out )
-
+    start=start, rows=rows), callopts=callopts, ...))
   Sys.setenv(plostime = as.numeric(now()))
 }

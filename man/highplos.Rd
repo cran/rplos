@@ -17,7 +17,8 @@ highplos(q, fl = NULL, fq = NULL, hl.fl = NULL, hl.snippets = NULL,
   hl.useFastVectorHighlighter = NULL, hl.usePhraseHighlighter = NULL,
   hl.highlightMultiTerm = NULL, hl.regex.slop = NULL,
   hl.regex.pattern = NULL, hl.regex.maxAnalyzedChars = NULL, start = 0,
-  rows = NULL, callopts = list(), sleep = 6, ...)
+  rows = NULL, errors = "simple", proxy = NULL, callopts = list(),
+  sleep = 6, ...)
 }
 \arguments{
 \item{q}{Search terms (character). You can search on specific fields by
@@ -34,7 +35,7 @@ Note that using this parameter doesn't influence the actual query, but is used
 to filter the resuls to a subset of those you want returned. For example,
 if you want full articles only, you can do 'doc_type:full'. In another example,
 if you want only results from the journal PLOS One, you can do
-'cross_published_journal_key:PLoSONE'. See journalnamekey() for journal
+'journal_key:PLoSONE'. See journalnamekey() for journal
 abbreviations.}
 
 \item{hl.fl}{A comma-separated list of fields for which to generate highlighted snippets.
@@ -174,7 +175,16 @@ you need to cycle through more results than the max allowed=1000)}
 
 \item{rows}{Number of results to return (integer)}
 
-\item{callopts}{Optional additional curl options (debugging tools mostly)}
+\item{errors}{(character) One of simple or complete. Simple gives http code and
+error message on an error, while complete gives both http code and error message,
+and stack trace, if available.}
+
+\item{proxy}{List of arguments for a proxy connection, including one or more of:
+url, port, username, password, and auth. See \code{\link[crul]{proxy}} for
+help, which is used to construct the proxy connection.}
+
+\item{callopts}{Optional additional curl options passed to
+\code{\link[crul]{HttpClient}}}
 
 \item{sleep}{Number of seconds to wait between requests. No need to use this for
 a single call to searchplos. However, if you are using searchplos in a loop or
@@ -197,10 +207,11 @@ highplos(q='alcohol', hl.fl = c('abstract','title'), rows=10)
 highplos(q='everything:"sports alcohol"~7', hl.fl='everything')
 highplos(q='alcohol', hl.fl='abstract', hl.fragsize=20, rows=5)
 highplos(q='alcohol', hl.fl='abstract', hl.snippets=5, rows=5)
-highplos(q='alcohol', hl.fl='abstract', hl.snippets=5, hl.mergeContiguous='true', rows=5)
-highplos(q='alcohol', hl.fl='abstract', hl.useFastVectorHighlighter='true', rows=5)
-highplos(q='everything:"experiment"', fq='doc_type:full', rows=100, hl.fl = 'title')
+highplos(q='alcohol', hl.fl='abstract', hl.snippets=5,
+  hl.mergeContiguous='true', rows=5)
+highplos(q='alcohol', hl.fl='abstract', hl.useFastVectorHighlighter='true',
+  rows=5)
+highplos(q='everything:"experiment"', fq='doc_type:full', rows=100,
+  hl.fl = 'title')
 }
-
 }
-

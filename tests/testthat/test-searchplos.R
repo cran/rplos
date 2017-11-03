@@ -4,8 +4,10 @@ context("searchplos")
 test_that("searchplos returns the correct", {
   skip_on_cran()
 
+  Sys.sleep(5)
   dat1 <- searchplos('ecology', 'id,publication_date', limit = 2)
-  dat2 <- searchplos(q="*:*", fl='id', fq='cross_published_journal_key:PLoSONE', start=0, limit=15)
+  Sys.sleep(5)
+  dat2 <- searchplos(q="*:*", fl='id', fq='journal_key:PLoSONE', start=0, limit=15)
 
   # values
 	expect_that(nrow(dat1$data), equals(2))

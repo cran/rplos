@@ -1,14 +1,12 @@
 #' Connect with PLoS API data
 #'
-#' \code{rplos} provides an R interface to the PLoS Search API. More 
-#' information about each function can be found in its help documentation. 
-#' If you are looking for PLOS article-Level metrics data, see the 
-#' \code{alm} package.
+#' \code{rplos} provides an R interface to the PLoS Search API. More
+#' information about each function can be found in its help documentation.
 #'
 #' @section rplos functions:
 #'
-#' Most rplos functions make web calls using the \code{httr} package, 
-#' and parse json using the \code{jsonlite} package.
+#' \pkg{rplos} functions make HTTP requests using the \pkg{crul} package,
+#' and parse json using the \pkg{jsonlite} package.
 #'
 #' @section PLoS API key:
 #'
@@ -17,7 +15,23 @@
 #' @section Tutorials:
 #'
 #' See the rOpenSci website for a tutorial:
-#' http://ropensci.org/tutorials/rplos_tutorial.html
+#' https://ropensci.org/tutorials/rplos_tutorial.html
+#'
+#' @section Throttling:
+#' Beware, PLOS recently has started throttling requests. That is,
+#' they will give error messages like "(503) Service Unavailable -
+#' The server cannot process the request due to a high load", which
+#' probably means you've done too many requests in a certain time period.
+#'
+#' Here's what they say (http://api.plos.org/solr/faq/#solr_api_recommended_usage)
+#' on the matter:
+#'
+#' "Please limit your API requests to 7200 requests a day, 300 per hour, 10 per
+#' minute and allow 5 seconds for your search to return results. If you exceed this
+#' threshold, we will lock out your IP address. If you're a high-volume user of
+#' the PLOS Search API and need more API requests a day, please contact us at
+#' api@plos.org to discuss your options. We currently limit API users to no more
+#' than five concurrent connections from a single IP address.""
 #'
 #' @examples \dontrun{
 #' searchplos(q='ecology', fl=c('id','publication_date'), limit = 2)
@@ -27,20 +41,20 @@
 #' head(out$data)
 #'
 #' # Get DOIs for only PLoS One articles
-#' out <- searchplos(q="*:*", fl='id', fq='cross_published_journal_key:PLoSONE', 
+#' out <- searchplos(q="*:*", fl='id', fq='journal_key:PLoSONE',
 #'   start=0, limit=15)
 #' head(out$data)
 #' }
 #'
-#' @importFrom httr GET content stop_for_status
+#' @importFrom crul HttpClient
 #' @importFrom jsonlite fromJSON
 #' @importFrom dplyr left_join bind_rows
 #' @importFrom plyr ddply llply summarise ldply
 #' @importFrom reshape2 melt
 #' @importFrom whisker whisker.render
-#' @importFrom solr solr_highlight solr_facet
+#' @importFrom solrium SolrClient
 #' @importFrom lubridate now
-#' @importFrom ggplot2 ggplot aes geom_bar theme_grey geom_line 
+#' @importFrom ggplot2 ggplot aes geom_bar theme_grey geom_line
 #' scale_colour_brewer labs theme
 #' @docType package
 #' @name rplos
@@ -54,8 +68,9 @@ NULL
 #' Defunct functions in rplos
 #'
 #' \itemize{
-#'  \item \code{\link{crossref}}: service no longer provided - 
+#'  \item \code{\link{crossref}}: service no longer provided -
 #'  see the package \code{rcrossref}
+#'  \item \code{\link{citations}}: service no longer available
 #' }
 #'
 #' @name rplos-defunct

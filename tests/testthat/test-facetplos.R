@@ -5,21 +5,24 @@ test_that("facetplos", {
   skip_on_cran()
 
   # Facet on a single field
-  aa <- facetplos(q='*:*', facet.field='journal', verbose=FALSE)
+  aa <- facetplos(q='*:*', facet.field='journal')
+
+  Sys.sleep(5)
 
   # Facet on multiple fields
-  bb <- facetplos(q='alcohol', facet.field=c('journal','subject'), verbose=FALSE)
+  bb <- facetplos(q='alcohol', facet.field=c('journal','subject'))
+
+  Sys.sleep(5)
 
   # Using mincount
-  cc <- facetplos(q='alcohol', facet.field='journal', facet.mincount='500', verbose=FALSE)
+  cc <- facetplos(q='alcohol', facet.field='journal', facet.mincount='500')
+
+  Sys.sleep(5)
 
   # Using facet.query to get counts
   ## Many facet.query terms
-  dd <- facetplos(q='*:*', facet.field='journal', facet.query='cell,bird', verbose=FALSE)
+  dd <- facetplos(q='*:*', facet.field='journal', facet.query='cell,bird')
 
-  # Date faceting
-  ee <- facetplos(q='*:*', url=url, facet.date='publication_date',
-   facet.date.start='NOW/DAY-5DAYS', facet.date.end='NOW', facet.date.gap='+1DAY', verbose=FALSE)
 
   # citations returns the correct classes
   expect_is(aa, "list")
@@ -47,15 +50,8 @@ test_that("facetplos", {
   expect_is(dd$facet_fields[[1]], "data.frame")
   expect_named(dd$facet_fields, 'journal')
 
-  expect_is(ee, "list")
-  expect_null(ee$facet_queries)
-  expect_null(ee$facet_ranges)
-  expect_null(ee$facet_fields)
-  expect_is(ee$facet_dates[[1]], "data.frame")
-  expect_is(as.Date(ee$facet_dates[[1]]$date), 'Date')
-
   # fails well
-  expect_equal(length(ploscompact(facetplos(verbose = FALSE))), 0)
-  expect_null(facetplos("*:*", url = "adsfad", verbose = FALSE)[[1]])
-  expect_error(facetplos("*:*", facet.field = "adsfad", verbose = FALSE), "Bad Request")
+  expect_error(facetplos(), "didn't detect any facet. fields")
+  expect_error(facetplos("*:*", facet.field = "adsfad"),
+               "400 - undefined field")
 })
