@@ -236,17 +236,22 @@ processing easier, and help visualize search results (see <code>highbrow()</code
 #&gt; 
 #&gt; $facet_fields
 #&gt; $facet_fields$journal
-#&gt;                                 X1      X2
-#&gt; 1                         plos one 1407216
-#&gt; 2                    plos genetics   54150
-#&gt; 3                   plos pathogens   47708
-#&gt; 4       plos computational biology   41170
-#&gt; 5 plos neglected tropical diseases   41072
-#&gt; 6                     plos biology   30012
-#&gt; 7                    plos medicine   21466
-#&gt; 8             plos clinical trials     496
-#&gt; 9                     plos medicin       9
+#&gt; # A tibble: 9 x 2
+#&gt;   term                             value  
+#&gt;   &lt;chr&gt;                            &lt;chr&gt;  
+#&gt; 1 plos one                         1687125
+#&gt; 2 plos genetics                    63261  
+#&gt; 3 plos pathogens                   56916  
+#&gt; 4 plos neglected tropical diseases 52484  
+#&gt; 5 plos computational biology       49163  
+#&gt; 6 plos biology                     34626  
+#&gt; 7 plos medicine                    25102  
+#&gt; 8 plos clinical trials             521    
+#&gt; 9 plos medicin                     9      
 #&gt; 
+#&gt; 
+#&gt; $facet_pivot
+#&gt; NULL
 #&gt; 
 #&gt; $facet_dates
 #&gt; NULL
@@ -261,22 +266,29 @@ processing easier, and help visualize search results (see <code>highbrow()</code
 </code></pre>
 
 <pre><code>#&gt; $facet_queries
-#&gt;        term value
-#&gt; 1 cell,bird    24
+#&gt; # A tibble: 1 x 2
+#&gt;   term      value
+#&gt;   &lt;chr&gt;     &lt;int&gt;
+#&gt; 1 cell,bird     6
 #&gt; 
 #&gt; $facet_fields
 #&gt; $facet_fields$journal
-#&gt;                                 X1      X2
-#&gt; 1                         plos one 1407216
-#&gt; 2                    plos genetics   54150
-#&gt; 3                   plos pathogens   47708
-#&gt; 4       plos computational biology   41170
-#&gt; 5 plos neglected tropical diseases   41072
-#&gt; 6                     plos biology   30012
-#&gt; 7                    plos medicine   21466
-#&gt; 8             plos clinical trials     496
-#&gt; 9                     plos medicin       9
+#&gt; # A tibble: 9 x 2
+#&gt;   term                             value  
+#&gt;   &lt;chr&gt;                            &lt;chr&gt;  
+#&gt; 1 plos one                         1687125
+#&gt; 2 plos genetics                    63261  
+#&gt; 3 plos pathogens                   56916  
+#&gt; 4 plos neglected tropical diseases 52484  
+#&gt; 5 plos computational biology       49163  
+#&gt; 6 plos biology                     34626  
+#&gt; 7 plos medicine                    25102  
+#&gt; 8 plos clinical trials             521    
+#&gt; 9 plos medicin                     9      
 #&gt; 
+#&gt; 
+#&gt; $facet_pivot
+#&gt; NULL
 #&gt; 
 #&gt; $facet_dates
 #&gt; NULL
@@ -292,25 +304,7 @@ processing easier, and help visualize search results (see <code>highbrow()</code
   facet.date.gap=&#39;+1DAY&#39;)
 </code></pre>
 
-<pre><code>#&gt; $facet_queries
-#&gt; NULL
-#&gt; 
-#&gt; $facet_fields
-#&gt; NULL
-#&gt; 
-#&gt; $facet_dates
-#&gt; $facet_dates$publication_date
-#&gt;                   date value
-#&gt; 1 2017-02-23T00:00:00Z  2749
-#&gt; 2 2017-02-24T00:00:00Z  1878
-#&gt; 3 2017-02-25T00:00:00Z     0
-#&gt; 4 2017-02-26T00:00:00Z   689
-#&gt; 5 2017-02-27T00:00:00Z   689
-#&gt; 6 2017-02-28T00:00:00Z     0
-#&gt; 
-#&gt; 
-#&gt; $facet_ranges
-#&gt; NULL
+<pre><code>#&gt; NULL
 </code></pre>
 
 <h3>Highlighted search</h3>
@@ -321,14 +315,14 @@ processing easier, and help visualize search results (see <code>highbrow()</code
 <pre><code class="r">highplos(q=&#39;alcohol&#39;, hl.fl = &#39;abstract&#39;, rows=2)
 </code></pre>
 
-<pre><code>#&gt; $`10.1371/journal.pmed.0040151`
-#&gt; $`10.1371/journal.pmed.0040151`$abstract
-#&gt; [1] &quot;Background: &lt;em&gt;Alcohol&lt;/em&gt; consumption causes an estimated 4% of the global disease burden, prompting&quot;
+<pre><code>#&gt; $`10.1371/journal.pone.0185457`
+#&gt; $`10.1371/journal.pone.0185457`$abstract
+#&gt; [1] &quot;Objectives: &lt;em&gt;Alcohol&lt;/em&gt;-related morbidity and mortality are significant public health issues&quot;
 #&gt; 
 #&gt; 
-#&gt; $`10.1371/journal.pone.0027752`
-#&gt; $`10.1371/journal.pone.0027752`$abstract
-#&gt; [1] &quot;Background: The negative influences of &lt;em&gt;alcohol&lt;/em&gt; on TB management with regard to delays in seeking&quot;
+#&gt; $`10.1371/journal.pone.0071284`
+#&gt; $`10.1371/journal.pone.0071284`$abstract
+#&gt; [1] &quot;\n&lt;em&gt;Alcohol&lt;/em&gt; dependence is a heterogeneous disorder where several signalling systems play important&quot;
 </code></pre>
 
 <p>Search for the term <em>alcohol</em> in the abstracts of articles, and return 
@@ -337,14 +331,14 @@ fragment size of 20 characters, return only 5 results</p>
 <pre><code class="r">highplos(q=&#39;alcohol&#39;, hl.fl=&#39;abstract&#39;, hl.fragsize=20, rows=2)
 </code></pre>
 
-<pre><code>#&gt; $`10.1371/journal.pmed.0040151`
-#&gt; $`10.1371/journal.pmed.0040151`$abstract
-#&gt; [1] &quot;Background: &lt;em&gt;Alcohol&lt;/em&gt;&quot;
+<pre><code>#&gt; $`10.1371/journal.pone.0185457`
+#&gt; $`10.1371/journal.pone.0185457`$abstract
+#&gt; [1] &quot;Objectives: &lt;em&gt;Alcohol&lt;/em&gt;&quot;
 #&gt; 
 #&gt; 
-#&gt; $`10.1371/journal.pone.0027752`
-#&gt; $`10.1371/journal.pone.0027752`$abstract
-#&gt; [1] &quot; of &lt;em&gt;alcohol&lt;/em&gt; on TB management&quot;
+#&gt; $`10.1371/journal.pone.0071284`
+#&gt; $`10.1371/journal.pone.0071284`$abstract
+#&gt; [1] &quot;\n&lt;em&gt;Alcohol&lt;/em&gt; dependence&quot;
 </code></pre>
 
 <p>Search for the term <em>experiment</em> across all sections of an article, return 
