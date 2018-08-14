@@ -239,13 +239,13 @@ processing easier, and help visualize search results (see <code>highbrow()</code
 #&gt; # A tibble: 9 x 2
 #&gt;   term                             value  
 #&gt;   &lt;chr&gt;                            &lt;chr&gt;  
-#&gt; 1 plos one                         1687125
-#&gt; 2 plos genetics                    63261  
-#&gt; 3 plos pathogens                   56916  
-#&gt; 4 plos neglected tropical diseases 52484  
-#&gt; 5 plos computational biology       49163  
-#&gt; 6 plos biology                     34626  
-#&gt; 7 plos medicine                    25102  
+#&gt; 1 plos one                         1697963
+#&gt; 2 plos genetics                    63684  
+#&gt; 3 plos pathogens                   57289  
+#&gt; 4 plos neglected tropical diseases 52972  
+#&gt; 5 plos computational biology       49489  
+#&gt; 6 plos biology                     34969  
+#&gt; 7 plos medicine                    25287  
 #&gt; 8 plos clinical trials             521    
 #&gt; 9 plos medicin                     9      
 #&gt; 
@@ -276,13 +276,13 @@ processing easier, and help visualize search results (see <code>highbrow()</code
 #&gt; # A tibble: 9 x 2
 #&gt;   term                             value  
 #&gt;   &lt;chr&gt;                            &lt;chr&gt;  
-#&gt; 1 plos one                         1687125
-#&gt; 2 plos genetics                    63261  
-#&gt; 3 plos pathogens                   56916  
-#&gt; 4 plos neglected tropical diseases 52484  
-#&gt; 5 plos computational biology       49163  
-#&gt; 6 plos biology                     34626  
-#&gt; 7 plos medicine                    25102  
+#&gt; 1 plos one                         1697963
+#&gt; 2 plos genetics                    63684  
+#&gt; 3 plos pathogens                   57289  
+#&gt; 4 plos neglected tropical diseases 52972  
+#&gt; 5 plos computational biology       49489  
+#&gt; 6 plos biology                     34969  
+#&gt; 7 plos medicine                    25287  
 #&gt; 8 plos clinical trials             521    
 #&gt; 9 plos medicin                     9      
 #&gt; 
@@ -315,14 +315,14 @@ processing easier, and help visualize search results (see <code>highbrow()</code
 <pre><code class="r">highplos(q=&#39;alcohol&#39;, hl.fl = &#39;abstract&#39;, rows=2)
 </code></pre>
 
-<pre><code>#&gt; $`10.1371/journal.pone.0185457`
+<pre><code>#&gt; $`10.1371/journal.pone.0201042`
+#&gt; $`10.1371/journal.pone.0201042`$abstract
+#&gt; [1] &quot;\nAcute &lt;em&gt;alcohol&lt;/em&gt; administration can lead to a loss of control over drinking. Several models argue&quot;
+#&gt; 
+#&gt; 
+#&gt; $`10.1371/journal.pone.0185457`
 #&gt; $`10.1371/journal.pone.0185457`$abstract
 #&gt; [1] &quot;Objectives: &lt;em&gt;Alcohol&lt;/em&gt;-related morbidity and mortality are significant public health issues&quot;
-#&gt; 
-#&gt; 
-#&gt; $`10.1371/journal.pone.0071284`
-#&gt; $`10.1371/journal.pone.0071284`$abstract
-#&gt; [1] &quot;\n&lt;em&gt;Alcohol&lt;/em&gt; dependence is a heterogeneous disorder where several signalling systems play important&quot;
 </code></pre>
 
 <p>Search for the term <em>alcohol</em> in the abstracts of articles, and return 
@@ -331,14 +331,14 @@ fragment size of 20 characters, return only 5 results</p>
 <pre><code class="r">highplos(q=&#39;alcohol&#39;, hl.fl=&#39;abstract&#39;, hl.fragsize=20, rows=2)
 </code></pre>
 
-<pre><code>#&gt; $`10.1371/journal.pone.0185457`
+<pre><code>#&gt; $`10.1371/journal.pone.0201042`
+#&gt; $`10.1371/journal.pone.0201042`$abstract
+#&gt; [1] &quot;\nAcute &lt;em&gt;alcohol&lt;/em&gt;&quot;
+#&gt; 
+#&gt; 
+#&gt; $`10.1371/journal.pone.0185457`
 #&gt; $`10.1371/journal.pone.0185457`$abstract
 #&gt; [1] &quot;Objectives: &lt;em&gt;Alcohol&lt;/em&gt;&quot;
-#&gt; 
-#&gt; 
-#&gt; $`10.1371/journal.pone.0071284`
-#&gt; $`10.1371/journal.pone.0071284`$abstract
-#&gt; [1] &quot;\n&lt;em&gt;Alcohol&lt;/em&gt; dependence&quot;
 </code></pre>
 
 <p>Search for the term <em>experiment</em> across all sections of an article, return 
