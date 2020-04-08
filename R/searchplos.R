@@ -77,7 +77,8 @@
 #' }
 
 searchplos <- function(q = NULL, fl = 'id', fq = NULL, sort = NULL, start = 0,
-  limit = 10, sleep = 6, errors = "simple", proxy = NULL, callopts = list(), ...) {
+  limit = 10, sleep = 6, errors = "simple", proxy = NULL, callopts = list(), 
+  progress = NULL, ...) {
 
   # Make sure limit is a numeric or integer
   limit <- tryCatch(as.numeric(as.character(limit)), warning=function(e) e)
@@ -128,9 +129,9 @@ searchplos <- function(q = NULL, fl = 'id', fq = NULL, sort = NULL, start = 0,
 	  if (length(args) == 0) args <- NULL
 	  jsonout <- suppressMessages(
 	    conn_plos$search(params = args, callopts = callopts,
-	    	minOptimizedRows = FALSE, ...)
+	    	minOptimizedRows = FALSE, progress = progress, ...)
 	  )
-	  meta <- dplyr::data_frame(
+	  meta <- dplyr::tibble(
 	    numFound = attr(jsonout, "numFound"),
 	    start = attr(jsonout, "start")
 	  )
@@ -157,12 +158,13 @@ searchplos <- function(q = NULL, fl = 'id', fq = NULL, sort = NULL, start = 0,
           fq = args[names(args) == "fq"],
           sort = args$sort,
           rows = as.integer(args$rows), start = as.integer(args$start),
-          wt = "json")), minOptimizedRows = FALSE, callopts = callopts, ...
+          wt = "json")), minOptimizedRows = FALSE, callopts = callopts,
+          progress = progress, ...
 	    ))
 	    out[[i]] <- jsonout
 	  }
 	  resdf  <- dplyr::bind_rows(out)
-	  meta <- dplyr::data_frame(
+	  meta <- dplyr::tibble(
 	    numFound = attr(jsonout, "numFound"),
 	    start = attr(jsonout, "start")
 	  )

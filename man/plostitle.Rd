@@ -4,9 +4,20 @@
 \alias{plostitle}
 \title{Search PLoS Journals titles.}
 \usage{
-plostitle(q = NULL, fl = "id", fq = NULL, sort = NULL, start = 0,
-  limit = 10, sleep = 6, errors = "simple", proxy = NULL,
-  callopts = NULL, ...)
+plostitle(
+  q = NULL,
+  fl = "id",
+  fq = NULL,
+  sort = NULL,
+  start = 0,
+  limit = 10,
+  sleep = 6,
+  errors = "simple",
+  proxy = NULL,
+  callopts = NULL,
+  progress = NULL,
+  ...
+)
 }
 \arguments{
 \item{q}{Search terms (character). You can search on specific fields by
@@ -51,6 +62,10 @@ url, port, username, password, and auth. See \code{\link[crul]{proxy}} for
 help, which is used to construct the proxy connection.}
 
 \item{callopts}{(list) optional curl options passed to \code{\link[crul]{HttpClient}}}
+
+\item{progress}{a function with logic for printing a progress
+bar for an HTTP request, ultimately passed down to \pkg{curl}.
+only supports \code{httr::progress()}}
 
 \item{...}{Additional Solr arguments}
 }

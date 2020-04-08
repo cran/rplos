@@ -7,7 +7,7 @@ Description: A programmatic interface to the 'SOLR' based
     articles, making plots, doing 'faceted' searches,
     'highlight' searches, and viewing results of 'highlighted'
     searches in a browser.
-Version: 0.8.6
+Version: 0.9.0
 License: MIT + file LICENSE
 Authors@R: c(
     person("Scott", "Chamberlain", role = c("aut", "cre"),
@@ -16,7 +16,8 @@ Authors@R: c(
     person("Carl", "Boettiger", role = "aut", email = "cboettig@gmail.com"),
     person("Karthik", "Ram", role = "aut", email = "karthik.ram@gmail.com")
     )
-URL: https://github.com/ropensci/rplos
+URL: https://docs.ropensci.org/rplos (website)
+        https://github.com/ropensci/rplos
 BugReports: https://github.com/ropensci/rplos/issues
 LazyData: true
 VignetteBuilder: knitr
@@ -25,16 +26,16 @@ Language: en-US
 Imports: ggplot2, crul (>= 0.7.4), jsonlite, dplyr, plyr, lubridate,
         reshape2, whisker, solrium (>= 1.0.2)
 Suggests: xml2, knitr, testthat, webmockr, vcr (>= 0.2.6)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 X-schema.org-applicationCategory: Literature
 X-schema.org-keywords: PLOS, library, science, JSON, XML, API, web,
         api-client, article, full text
 X-schema.org-isPartOf: https://ropensci.org
 NeedsCompilation: no
-Packaged: 2019-05-03 19:25:57 UTC; sckott
+Packaged: 2020-04-07 22:36:28 UTC; sckott
 Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
   Carl Boettiger [aut],
   Karthik Ram [aut]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-05-03 19:50:02 UTC
+Date/Publication: 2020-04-08 04:40:02 UTC
