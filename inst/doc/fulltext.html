@@ -12,13 +12,45 @@
 
 <meta name="author" content="Scott Chamberlain" />
 
-<meta name="date" content="2020-04-07" />
+<meta name="date" content="2021-02-23" />
 
 <title>Full text</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
@@ -105,6 +137,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -302,7 +335,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Full text</h1>
 <h4 class="author">Scott Chamberlain</h4>
-<h4 class="date">2020-04-07</h4>
+<h4 class="date">2021-02-23</h4>
 
 
 
@@ -329,26 +362,26 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Use <code>searchplos()</code> to get a lot of DOIs, then get the URLs for full text XML</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>dois &lt;-<span class="st"> </span><span class="kw">searchplos</span>(<span class="dt">q =</span> <span class="st">&quot;*:*&quot;</span>, <span class="dt">fq =</span> <span class="st">&#39;doc_type:full&#39;</span>, <span class="dt">limit =</span> <span class="dv">20</span>)<span class="op">$</span>data<span class="op">$</span>id</span>
 <span id="cb9-2"><a href="#cb9-2"></a><span class="kw">full_text_urls</span>(dois)</span></code></pre></div>
-<pre><code>#&gt;  [1] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020843&amp;type=manuscript&quot;
-#&gt;  [2] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0022257&amp;type=manuscript&quot;
-#&gt;  [3] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023139&amp;type=manuscript&quot;
-#&gt;  [4] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023138&amp;type=manuscript&quot;
-#&gt;  [5] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023119&amp;type=manuscript&quot;
-#&gt;  [6] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023113&amp;type=manuscript&quot;
-#&gt;  [7] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023133&amp;type=manuscript&quot;
-#&gt;  [8] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023106&amp;type=manuscript&quot;
-#&gt;  [9] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023117&amp;type=manuscript&quot;
-#&gt; [10] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023135&amp;type=manuscript&quot;
-#&gt; [11] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023134&amp;type=manuscript&quot;
-#&gt; [12] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0023105&amp;type=manuscript&quot;
-#&gt; [13] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020929&amp;type=manuscript&quot;
-#&gt; [14] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020900&amp;type=manuscript&quot;
-#&gt; [15] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020913&amp;type=manuscript&quot;
-#&gt; [16] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020935&amp;type=manuscript&quot;
-#&gt; [17] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020914&amp;type=manuscript&quot;
-#&gt; [18] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020919&amp;type=manuscript&quot;
-#&gt; [19] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020899&amp;type=manuscript&quot;
-#&gt; [20] &quot;http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0020892&amp;type=manuscript&quot;</code></pre>
+<pre><code>#&gt;  [1] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.0020071&amp;type=manuscript&quot;
+#&gt;  [2] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000152&amp;type=manuscript&quot; 
+#&gt;  [3] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000153&amp;type=manuscript&quot; 
+#&gt;  [4] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000159&amp;type=manuscript&quot; 
+#&gt;  [5] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000165&amp;type=manuscript&quot; 
+#&gt;  [6] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000166&amp;type=manuscript&quot; 
+#&gt;  [7] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000167&amp;type=manuscript&quot; 
+#&gt;  [8] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000173&amp;type=manuscript&quot; 
+#&gt;  [9] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000175&amp;type=manuscript&quot; 
+#&gt; [10] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000176&amp;type=manuscript&quot; 
+#&gt; [11] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.0030121&amp;type=manuscript&quot;
+#&gt; [12] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.0030124&amp;type=manuscript&quot;
+#&gt; [13] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.0030125&amp;type=manuscript&quot;
+#&gt; [14] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.0030127&amp;type=manuscript&quot;
+#&gt; [15] &quot;http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.0030130&amp;type=manuscript&quot;
+#&gt; [16] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000409&amp;type=manuscript&quot; 
+#&gt; [17] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000410&amp;type=manuscript&quot; 
+#&gt; [18] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000411&amp;type=manuscript&quot; 
+#&gt; [19] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000414&amp;type=manuscript&quot; 
+#&gt; [20] &quot;http://journals.plos.org/plosbiology/article/file?id=10.1371/journal.pbio.1000421&amp;type=manuscript&quot;</code></pre>
 </div>
 <div id="get-xml" class="section level3">
 <h3>Get XML</h3>
@@ -375,25 +408,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb16-2"><a href="#cb16-2"></a>  <span class="kw">library</span>(<span class="st">&quot;xml2&quot;</span>)</span>
 <span id="cb16-3"><a href="#cb16-3"></a>  <span class="kw">xml_text</span>(<span class="kw">xml_find_all</span>(<span class="kw">read_xml</span>(xml), <span class="st">&quot;//abstract&quot;</span>))</span>
 <span id="cb16-4"><a href="#cb16-4"></a>}</span></code></pre></div>
-<pre><code>#&gt; [1] &quot;BackgroundWolbachia are intriguing symbiotic endobacteria with a peculiar host range that includes arthropods and a single nematode family, the Onchocercidae encompassing agents of filariases. This raises the question of the origin of infection in filariae. Wolbachia infect the female germline and the hypodermis. Some evidences lead to the theory that Wolbachia act as mutualist and coevolved with filariae from one infection event: their removal sterilizes female filariae; all the specimens of a positive species are infected; Wolbachia are vertically inherited; a few species lost the symbiont. However, most data on Wolbachia and filaria relationships derive from studies on few species of Onchocercinae and Dirofilariinae, from mammals.Methodology/Principal FindingsWe investigated the Wolbachia distribution testing 35 filarial species, including 28 species and 7 genera and/or subgenera newly screened, using PCR, immunohistochemical staining, whole mount fluorescent analysis, and cocladogenesis analysis. (i) Among the newly screened Onchocercinae from mammals eight species harbour Wolbachia but for some of them, bacteria are absent in the hypodermis, or in variable density. (ii) Wolbachia are not detected in the pathological model Monanema martini and in 8, upon 9, species of Cercopithifilaria. (iii) Supergroup F Wolbachia is identified in two newly screened Mansonella species and in Cercopithifilaria japonica. (iv) Type F Wolbachia infect the intestinal cells and somatic female genital tract. (v) Among Oswaldofilariinae, Waltonellinae and Splendidofilariinae, from saurian, anuran and bird respectively, Wolbachia are not detected.Conclusions/SignificanceThe absence of Wolbachia in 63% of onchocercids, notably in the ancestral Oswaldofilariinae estimated 140 mya old, the diverse tissues or specimens distribution, and a recent lateral transfer in supergroup F Wolbachia, modify the current view on the role and evolution of the endosymbiont and their hosts. Further genomic analyses on some of the newly sampled species are welcomed to decipher the open questions.&quot;</code></pre>
-<p>Extract reference lists, just give back first one from each for brevity sake</p>
+<pre><code>#&gt; [1] &quot;With the burgeoning immunological data in the scientific literature, scientists must increasingly rely on Internet resources to inform and enhance their work. Here we provide a brief overview of the adaptive immune response and summaries of immunoinformatics resources, emphasizing those with Web interfaces. These resources include searchable databases of epitopes and immune-related molecules, and analysis tools for T cell and B cell epitope prediction, vaccine design, and protein structure comparisons. There is an agreeable synergy between the growing collections in immune-related databases and the growing sophistication of analysis software; the databases provide the foundation for developing predictive computational tools, which in turn enable more rapid identification of immune responses to populate the databases. Collectively, these resources contribute to improved understanding of immune responses and escape, and evolution of pathogens under immune pressure. The public health implications are vast, including designing vaccines, understanding autoimmune diseases, and defining the correlates of immune protection.&quot;</code></pre>
+<p>Extract reference lists, just give back first few for brevity</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">if</span> (<span class="kw">requireNamespace</span>(<span class="st">&quot;xml2&quot;</span>)) {</span>
 <span id="cb18-2"><a href="#cb18-2"></a>  <span class="kw">library</span>(<span class="st">&quot;xml2&quot;</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a>  <span class="kw">lapply</span>(out[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>], <span class="cf">function</span>(x){</span>
-<span id="cb18-4"><a href="#cb18-4"></a>    <span class="kw">xml_find_all</span>(<span class="kw">read_xml</span>(x), <span class="st">&quot;//ref-list/ref&quot;</span>)[[<span class="dv">1</span>]]</span>
-<span id="cb18-5"><a href="#cb18-5"></a>  })</span>
-<span id="cb18-6"><a href="#cb18-6"></a>}</span></code></pre></div>
-<pre><code>#&gt; $`10.1371/journal.pone.0022257`
-#&gt; {xml_node}
-#&gt; &lt;ref id=&quot;pone.0022257-Gao1&quot;&gt;
-#&gt; [1] &lt;label&gt;1&lt;/label&gt;
-#&gt; [2] &lt;element-citation publication-type=&quot;journal&quot; xlink:type=&quot;simple&quot;&gt;\n  &lt;per ...
-#&gt; 
-#&gt; $`10.1371/journal.pone.0023139`
-#&gt; {xml_node}
-#&gt; &lt;ref id=&quot;pone.0023139-DeLanghe1&quot;&gt;
-#&gt; [1] &lt;label&gt;1&lt;/label&gt;
-#&gt; [2] &lt;element-citation publication-type=&quot;journal&quot; xlink:type=&quot;simple&quot;&gt;\n  &lt;per ...</code></pre>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="kw">xml_find_all</span>(<span class="kw">read_xml</span>(out[[<span class="dv">3</span>]]), <span class="st">&quot;//ref-list/ref&quot;</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</span>
+<span id="cb18-4"><a href="#cb18-4"></a>}</span></code></pre></div>
+<pre><code>#&gt; {xml_nodeset (2)}
+#&gt; [1] &lt;ref id=&quot;pbio.1000153-Fetz1&quot;&gt;\n  &lt;label&gt;1&lt;/label&gt;\n  &lt;element-citation pu ...
+#&gt; [2] &lt;ref id=&quot;pbio.1000153-Wessberg1&quot;&gt;\n  &lt;label&gt;2&lt;/label&gt;\n  &lt;element-citatio ...</code></pre>
 </div>
 
 

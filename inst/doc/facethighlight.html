@@ -12,13 +12,45 @@
 
 <meta name="author" content="Scott Chamberlain" />
 
-<meta name="date" content="2020-04-07" />
+<meta name="date" content="2021-02-23" />
 
 <title>Faceted and highlighted searches</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
@@ -105,6 +137,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -302,7 +335,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Faceted and highlighted searches</h1>
 <h4 class="author">Scott Chamberlain</h4>
-<h4 class="date">2020-04-07</h4>
+<h4 class="date">2021-02-23</h4>
 
 
 
@@ -323,14 +356,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 #&gt; $facet_fields$journal
 #&gt; # A tibble: 9 x 2
 #&gt;   term                             value  
-#&gt;   &lt;fct&gt;                            &lt;fct&gt;  
-#&gt; 1 plos one                         1939972
-#&gt; 2 plos genetics                    72382  
-#&gt; 3 plos pathogens                   65865  
-#&gt; 4 plos neglected tropical diseases 64913  
-#&gt; 5 plos computational biology       59616  
-#&gt; 6 plos biology                     41954  
-#&gt; 7 plos medicine                    29883  
+#&gt;   &lt;chr&gt;                            &lt;chr&gt;  
+#&gt; 1 plos one                         2073767
+#&gt; 2 plos genetics                    77191  
+#&gt; 3 plos neglected tropical diseases 72937  
+#&gt; 4 plos pathogens                   71789  
+#&gt; 5 plos computational biology       66404  
+#&gt; 6 plos biology                     44593  
+#&gt; 7 plos medicine                    32612  
 #&gt; 8 plos clinical trials             521    
 #&gt; 9 plos medicin                     9      
 #&gt; 
@@ -349,20 +382,20 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 #&gt; # A tibble: 1 x 2
 #&gt;   term      value
 #&gt;   &lt;chr&gt;     &lt;int&gt;
-#&gt; 1 cell,bird 11353
+#&gt; 1 cell,bird 12052
 #&gt; 
 #&gt; $facet_fields
 #&gt; $facet_fields$journal
 #&gt; # A tibble: 9 x 2
 #&gt;   term                             value  
-#&gt;   &lt;fct&gt;                            &lt;fct&gt;  
-#&gt; 1 plos one                         1939972
-#&gt; 2 plos genetics                    72382  
-#&gt; 3 plos pathogens                   65865  
-#&gt; 4 plos neglected tropical diseases 64913  
-#&gt; 5 plos computational biology       59616  
-#&gt; 6 plos biology                     41954  
-#&gt; 7 plos medicine                    29883  
+#&gt;   &lt;chr&gt;                            &lt;chr&gt;  
+#&gt; 1 plos one                         2073767
+#&gt; 2 plos genetics                    77191  
+#&gt; 3 plos neglected tropical diseases 72937  
+#&gt; 4 plos pathogens                   71789  
+#&gt; 5 plos computational biology       66404  
+#&gt; 6 plos biology                     44593  
+#&gt; 7 plos medicine                    32612  
 #&gt; 8 plos clinical trials             521    
 #&gt; 9 plos medicin                     9      
 #&gt; 
